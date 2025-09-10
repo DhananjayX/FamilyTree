@@ -1,0 +1,12 @@
+{
+  "treeid": "100005",
+  "treename": "Chen Technology Dynasty",
+  "description": "Asian-American family in technology sector",
+  "owneremail": "david.chen@example.com",
+  "ownerid": "100000000007",
+  "ispublic": false,
+  "createdate": "2025-09-10T14:00:00Z",
+  "modifydate": "2025-09-10T14:00:00Z",
+  "tags": ["asian-american", "technology", "silicon-valley"],
+  "notes": "Family involved in tech industry and Silicon Valley development"
+}

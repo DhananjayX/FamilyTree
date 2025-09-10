@@ -1,0 +1,24 @@
+{
+  "memberId": "100000000003",
+  "treeId": "100001",
+  "firstName": "David",
+  "lastName": "Smith",
+  "birthDate": "1975-11-08",
+  "gender": "male",
+  "fatherId": "100000000001",
+  "motherId": "100000000002",
+  "spouseIds": [],
+  "emails": ["david.smith@example.com"],
+  "phone": "+1-555-0103",
+  "address": {
+    "street": "456 Oak Ave",
+    "city": "Chicago",
+    "state": "IL",
+    "zipCode": "60601",
+    "country": "USA"
+  },
+  "notes": "Software engineer",
+  "profileImage": null,
+  "createDate": "2025-09-10T10:10:00Z",
+  "modifyDate": "2025-09-10T10:10:00Z"
+}

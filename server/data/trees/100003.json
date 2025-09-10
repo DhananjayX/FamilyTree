@@ -1,0 +1,12 @@
+{
+  "treeid": "100003",
+  "treename": "O'Brien Irish Heritage",
+  "description": "Tracing Irish roots back to County Cork",
+  "owneremail": "patrick.obrien@example.com",
+  "ownerid": "100000000005",
+  "ispublic": false,
+  "createdate": "2025-09-10T12:00:00Z",
+  "modifydate": "2025-09-10T12:00:00Z",
+  "tags": ["irish", "heritage", "immigration"],
+  "notes": "Researching family immigration from Ireland in the 1800s"
+}

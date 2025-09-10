@@ -1,0 +1,88 @@
+/* Header Component Styles */
+.app-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: var(--spacing-2xl) 0;
+  text-align: center;
+  box-shadow: var(--shadow-medium);
+  transition: padding 0.3s ease, box-shadow 0.3s ease;
+}
+
+.header-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  position: relative;
+}
+
+.home-icon-button {
+  position: absolute;
+  left: var(--spacing-lg);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s ease, opacity 0.5s ease, visibility 0.5s ease;
+  backdrop-filter: blur(10px);
+}
+
+.home-icon-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.home-icon-button.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-50%) scale(0.8);
+}
+
+.home-icon-button::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9,22 9,12 15,12 15,22'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.app-title {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-sm);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: font-size 0.3s ease, margin-bottom 0.3s ease;
+}
+
+.app-subtitle {
+  font-size: var(--font-size-lg);
+  font-weight: 400;
+  line-height: 1.4;
+  opacity: 0.9;
+  margin-bottom: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Compact Header Styles */
+.app-header-compact {
+  padding: var(--spacing-lg) 0;
+  box-shadow: var(--shadow-light);
+}
+
+.app-header-compact .app-title {
+  font-size: var(--font-size-2xl);
+  margin-bottom: 0;
+}

@@ -1,0 +1,12 @@
+{
+  "treeid": "100002",
+  "treename": "Johnson Medical Family",
+  "description": "Healthcare professionals and medical researchers",
+  "owneremail": "sarah.johnson@example.com",
+  "ownerid": "100000000004",
+  "ispublic": true,
+  "createdate": "2025-09-10T11:00:00Z",
+  "modifydate": "2025-09-10T11:00:00Z",
+  "tags": ["medical", "healthcare", "research"],
+  "notes": "Family dedicated to medical profession and healthcare advancement"
+}
