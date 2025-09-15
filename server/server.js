@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs').promises;
 const path = require('path');
+const familydataRoutes = require('./routes/familydata');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -315,6 +316,8 @@ app.get('/api/health', (req, res) => {
     service: 'Family Tree API'
   });
 });
+
+app.use('/api', familydataRoutes);
 
 // Start server
 async function startServer() {
