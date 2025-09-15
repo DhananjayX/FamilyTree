@@ -2,7 +2,12 @@
 
 // ✅ Calculate age from dob
 export function calculateAge(dob, dod = null) {
-  if (!dob) return null;
+  // normalize inputs that might be empty strings or the string 'null'
+  if (!dob || (typeof dob === 'string' && dob.trim().toLowerCase() === 'null')) return null;
+  if (typeof dod === 'string') {
+    const t = dod.trim().toLowerCase();
+    if (t === '' || t === 'null' || t === 'undefined') dod = null;
+  }
   const birth = new Date(dob);
   const endDate = dod ? new Date(dod) : new Date();
   let age = endDate.getFullYear() - birth.getFullYear();
@@ -61,14 +66,16 @@ export function getDescendants(personId, people, depth = 1) {
   return result;
 }
 
-// ✅ Get siblings (same parents)
+// ✅ Get siblings (only full siblings: both mother and father match and are non-empty)
 export function getSiblings(person, people) {
   if (!person) return [];
-  return people.filter(
-    p =>
-      p.personId !== person.personId &&
-      (p.motherId === person.motherId || p.fatherId === person.fatherId)
-  );
+  return people.filter(p => {
+    if (p.personId === person.personId) return false;
+    // require both parents to be present and equal
+    if (!person.motherId || !person.fatherId) return false;
+    if (!p.motherId || !p.fatherId) return false;
+    return p.motherId === person.motherId && p.fatherId === person.fatherId;
+  });
 }
 
 // ✅ Get spouse(s)

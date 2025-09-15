@@ -28,6 +28,13 @@ const ViewTree = () => {
 				</div>
 				{selectedPerson ? (
 					<ErrorBoundary>
+						{/* debug: show selected person JSON for local inspection */}
+						<div style={{ marginBottom: 8, fontSize: 12, color: '#333' }}>
+							<details>
+								<summary style={{ cursor: 'pointer' }}>Selected person (debug)</summary>
+								<pre style={{ maxHeight: 200, overflow: 'auto' }}>{JSON.stringify(selectedPerson, null, 2)}</pre>
+							</details>
+						</div>
 						<CenteredFamilyTree person={selectedPerson} people={persons} />
 					</ErrorBoundary>
 				) : (

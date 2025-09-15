@@ -1,16 +1,5 @@
 import React, { useState } from 'react';
-
-function calculateAge(dob) {
-  if (!dob) return '-';
-  const birth = new Date(dob);
-  const today = new Date();
-  let age = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-    age--;
-  }
-  return age;
-}
+import { calculateAge } from '../../utils/familyUtils.js';
 
 
 const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
@@ -54,7 +43,8 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
           Search
         </button>
       </form>
-      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+      <div style={{ maxHeight: 'calc(100vh - 160px)', overflow: 'auto' }}>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {filteredPersons.map(person => (
           <li
             key={person.personId}
@@ -68,10 +58,11 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
             }}
             onClick={() => onSelect && onSelect(person.personId)}
           >
-            {person.firstName} {person.lastName} ({calculateAge(person.dob)})
+            {person.firstName} {person.lastName} [{calculateAge(person.dob, person.dod) ?? '-'}]
           </li>
         ))}
-      </ul>
+        </ul>
+      </div>
     </aside>
   );
 };

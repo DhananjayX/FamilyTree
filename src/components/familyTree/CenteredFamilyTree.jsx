@@ -143,6 +143,11 @@ function CenteredFamilyTree({
     };
   }, [person, people, width, height, maxAncestors, maxDescendants, levelGap]);
 
+  // debug logging to help local devs inspect the constructed graph
+  if (typeof console !== 'undefined' && person) {
+    console.debug('CenteredFamilyTree: selectedPersonId=', person.personId, 'nodes=', nodes.length, 'links=', links.length);
+  }
+
   // Render SVG
   // small helper to draw a line with slight curve (quadratic)
   const renderLink = (link, i) => {

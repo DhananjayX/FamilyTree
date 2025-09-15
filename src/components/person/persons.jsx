@@ -137,7 +137,7 @@ const Persons = () => {
           Save to Server
         </button>
         {/* Show nothing else on initial load */}
-        {showForm && <AddPersonForm onAdd={handleAddPerson} />}
+  {showForm && <AddPersonForm onAdd={handleAddPerson} persons={persons} />}
         {selectedPersonId && !showForm && (
           editingPersonId === selectedPersonId ? (
             <EditPersonForm

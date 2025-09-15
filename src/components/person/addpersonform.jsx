@@ -7,11 +7,13 @@ const GENDER_OPTIONS = [
   { value: 'other', label: 'Other' }
 ];
 
-const AddPersonForm = ({ onAdd }) => {
+const AddPersonForm = ({ onAdd, persons = [] }) => {
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
     gender: '',
+    motherId: '',
+    fatherId: '',
     dob: '',
     dod: '',
     address: '',
@@ -46,6 +48,24 @@ const AddPersonForm = ({ onAdd }) => {
       <div><label>Date of Death:</label><input name="dod" type="date" value={form.dod} onChange={handleChange} /></div>
       <div><label>Address:</label><input name="address" value={form.address} onChange={handleChange} /></div>
       <div><label>Notes:</label><input name="notes" value={form.notes} onChange={handleChange} /></div>
+      <div>
+        <label>Mother:</label>
+        <select name="motherId" value={form.motherId} onChange={handleChange}>
+          <option value="">-- None --</option>
+          {persons.filter(p => p.gender === 'female').map(p => (
+            <option key={p.personId} value={p.personId}>{p.firstName} {p.lastName}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label>Father:</label>
+        <select name="fatherId" value={form.fatherId} onChange={handleChange}>
+          <option value="">-- None --</option>
+          {persons.filter(p => p.gender === 'male').map(p => (
+            <option key={p.personId} value={p.personId}>{p.firstName} {p.lastName}</option>
+          ))}
+        </select>
+      </div>
       <div style={{ marginTop: '1rem' }}>
         <button type="submit">Add Person</button>
       </div>
