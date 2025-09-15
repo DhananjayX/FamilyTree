@@ -27,12 +27,18 @@ function Home() {
             />
           ))}
         </div>          
-        <div className="more-button-container">
+        <div className="more-button-container" style={{ display: 'flex', gap: 12 }}>
           <Button 
             variant="primary" 
-            onClick={() => console.log("More clicked")}
+            onClick={() => navigate('/persons')}
           >
             More...
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={() => navigate('/viewtree')}
+          >
+            View Tree
           </Button>
         </div>
       </div>
