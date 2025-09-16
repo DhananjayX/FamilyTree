@@ -4,25 +4,14 @@ import AddSpouseForm from './addspouseform.jsx';
 import EditPersonForm from './editpersonform.jsx';
 import PersonListSidebar from './personlistsidebar.jsx';
 import PersonDetails from './persondetails.jsx';
-import { savePersonsToLocal, loadPersonsFromLocal, savePersonsToBackend, setupAutoSave } from '../../routes/datastore.js';
-
-// Dummy initial data matching FamilyData.json structure
-export const initialPersons = [
-  {
-    personId: 'p1',
-    firstName: 'John',
-    lastName: 'Doe',
-    gender: 'male',
-    dob: '1950-05-20',
-    dod: null,
-    address: '123 Main St, City',
-    notes: 'Loved gardening',
-    spouses: []
-  }
-];
+import { savePersonsToLocal, savePersonsToBackend, setupAutoSave } from '../../routes/datastore.js';
+import { usePersonsData } from '../../hooks/usePersonsData.js';
+import config from '../../config/index.js';
 
 const Persons = () => {
-  const [persons, setPersons] = useState(() => loadPersonsFromLocal() || initialPersons);
+  // Use the custom hook for persons data management
+  const { persons, setPersons, loading, error, treeMetadata, refreshData } = usePersonsData();
+  
   const [showForm, setShowForm] = useState(false);
   const [addingSpouseFor, setAddingSpouseFor] = useState(null);
   const [editingPersonId, setEditingPersonId] = useState(null);
@@ -110,7 +99,7 @@ const Persons = () => {
   }, [persons]);
 
   useEffect(() => {
-    const timeout = setTimeout(saveToBackend, 2000); // debounce 2s
+    const timeout = setTimeout(saveToBackend, config.app.autoSaveInterval); // debounce from config
     return () => clearTimeout(timeout);
   }, [saveToBackend]);
 
@@ -120,6 +109,31 @@ const Persons = () => {
       .then(() => alert('Data saved to server!'))
       .catch(err => alert('Failed to save to server: ' + err.message));
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+        <div>
+          <h3>Loading family tree data...</h3>
+          <p>Fetching data from server...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state with retry option
+  if (error) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+        <div style={{ textAlign: 'center' }}>
+          <h3>Error loading data</h3>
+          <p style={{ color: 'red' }}>{error}</p>
+          <button onClick={refreshData}>Retry</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row', minHeight: '80vh' }}>
