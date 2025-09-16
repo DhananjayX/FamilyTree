@@ -1,22 +1,27 @@
-[
-  {
-    "personId": "p1",
-    "firstName": "Narsinh ",
-    "lastName": "Kulkarni",
-    "gender": "male",
-    "dob": "1952-01-01",
-    "dod": null,
-    "address": "Kanerwadi",
-    "notes": "",
-    "spouses": [
-      {
-        "spouseId": "p1757954227228",
-        "marriageDate": "1983-01-01",
-        "divorceDate": ""
-      }
-    ],
-    "fatherId": "p1757968516644"
-  },
+{
+  "treeId": "tree_0000x",
+  "treeName": "Kulkarni Family Tree",
+  "creatorEmailId": "dhananjay@example.com",
+  "createDate": "2024-01-01T00:00:00.000Z",
+  "treeData": [
+    {
+      "personId": "p1",
+      "firstName": "Narsinh ",
+      "lastName": "Kulkarni",
+      "gender": "male",
+      "dob": "1952-01-01",
+      "dod": null,
+      "address": "Kanerwadi",
+      "notes": "",
+      "spouses": [
+        {
+          "spouseId": "p1757954227228",
+          "marriageDate": "1983-01-01",
+          "divorceDate": ""
+        }
+      ],
+      "fatherId": "p1757968516644"
+    },
   {
     "firstName": "Dhananjay",
     "lastName": "Kulkarni",
@@ -539,4 +544,5 @@
     "personId": "p1757975100383",
     "spouses": []
   }
-]
+  ]
+}
