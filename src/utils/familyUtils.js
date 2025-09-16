@@ -85,3 +85,76 @@ export function getSpouses(person, people) {
     .map(s => getPersonById(s.spouseId, people))
     .filter(Boolean);
 }
+
+// ✅ Get upcoming birthdays in the specified month (defaults to current month)
+// Returns array of { personId, name, dob, day }
+export function upcomingBday(people, month = null) {
+  if (!Array.isArray(people)) return [];
+  const now = new Date();
+  const targetMonth = (month === null || month === undefined) ? now.getMonth() : (Number(month) || 0);
+
+  const list = people
+    .map(p => {
+      const raw = p && p.dob;
+      if (!raw || (typeof raw === 'string' && raw.trim().toLowerCase() === 'null')) return null;
+      const d = new Date(raw);
+      if (isNaN(d)) return null;
+      return {
+        personId: p.personId,
+        name: `${p.firstName || ''} ${p.lastName || ''}`.trim(),
+        dob: raw,
+        day: d.getDate(),
+        month: d.getMonth()
+      };
+    })
+    .filter(Boolean)
+    .filter(item => item.month === targetMonth)
+    .sort((a, b) => a.day - b.day)
+    .map(({ personId, name, dob, day }) => ({ personId, name, dob, day }));
+
+  return list;
+}
+
+// ✅ Get upcoming anniversaries in the specified month (defaults to current month)
+// Returns array of { personIds: [id1,id2], couple, marriageDate, day }
+export function upcomingAnniversary(people, month = null) {
+  if (!Array.isArray(people)) return [];
+  const now = new Date();
+  const targetMonth = (month === null || month === undefined) ? now.getMonth() : (Number(month) || 0);
+
+  const seenPairs = new Set();
+  const list = [];
+
+  people.forEach(p => {
+    const spouses = p.spouses || [];
+    spouses.forEach(s => {
+      if (!s || !s.spouseId) return;
+      const spouseId = s.spouseId;
+      // avoid duplicate pair entries (sort ids)
+      const pairKey = [p.personId, spouseId].sort().join('|');
+      if (seenPairs.has(pairKey)) return;
+
+      const raw = s.marriageDate || s.marriage || null;
+      if (!raw || (typeof raw === 'string' && raw.trim().toLowerCase() === 'null')) return;
+      const d = new Date(raw);
+      if (isNaN(d)) return;
+      if (d.getMonth() !== targetMonth) return;
+
+      // find spouse person to build names
+      const spousePerson = people.find(x => x.personId === spouseId) || null;
+      const nameA = `${p.firstName || ''} ${p.lastName || ''}`.trim();
+      const nameB = spousePerson ? `${spousePerson.firstName || ''} ${spousePerson.lastName || ''}`.trim() : spouseId;
+
+      list.push({
+        personIds: [p.personId, spouseId],
+        couple: `${nameA} & ${nameB}`,
+        marriageDate: raw,
+        day: d.getDate()
+      });
+
+      seenPairs.add(pairKey);
+    });
+  });
+
+  return list.sort((a, b) => a.day - b.day);
+}

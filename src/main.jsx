@@ -7,6 +7,7 @@ import Home from './components/home/home.jsx';
 import Members from './components/members/members.jsx';
 import Persons from './components/person/persons.jsx';
 import ViewTree from './components/familyTree/ViewTree.jsx';
+import UpcomingEvents from './components/timeline/UpcomingEvents.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -18,6 +19,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="members" element={<Members />} />
           <Route path="persons" element={<Persons />} />
           <Route path="viewtree" element={<ViewTree />} />
+          <Route path="upcoming" element={<UpcomingEvents />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
