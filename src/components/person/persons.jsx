@@ -162,19 +162,20 @@ const Persons = () => {
             />
           ) : (
             <PersonDetails
-              person={persons.find(p => p.personId === selectedPersonId)}
-              persons={persons}
-              onEdit={id => setEditingPersonId(id)}
-              onDelete={id => {
-                if (window.confirm('Are you sure you want to delete this person?')) {
-                  setPersons(persons.filter(p => p.personId !== id));
-                  setSelectedPersonId(null);
-                }
-              }}
-              onEditSpouse={handleEditSpouse}
-              onAddSpouse={handleAddSpouse}
+                person={persons.find(p => p.personId === selectedPersonId)}
+                persons={persons}
+                onEdit={id => setEditingPersonId(id)}
+                onDelete={id => {
+                  if (window.confirm('Are you sure you want to delete this person?')) {
+                    setPersons(persons.filter(p => p.personId !== id));
+                    setSelectedPersonId(null);
+                  }
+                }}
+                onEditSpouse={handleEditSpouse}
+                onAddSpouse={handleAddSpouse}
+                onAddPerson={handleAddPerson}
                 onSelectPerson={setSelectedPersonId}
-            />
+              />
           )
         )}
       </div>

@@ -1,0 +1,4 @@
+.ft-nav { display: flex; gap: 12px; align-items: center; }
+.ft-nav-link { color: #333; text-decoration: none; padding: 6px 8px; border-radius: 6px; }
+.ft-nav-link.active { background: #1976d2; color: #fff; }
+.ft-nav-link:hover { background: rgba(25,118,210,0.08); }

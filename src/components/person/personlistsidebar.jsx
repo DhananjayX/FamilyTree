@@ -71,7 +71,9 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
             }}
             onClick={() => onSelect && onSelect(person.personId)}
           >
-            {person.firstName} {person.lastName} [{calculateAge(person.dob, person.dod) ?? '-'}]
+            <span style={{ color: person.dod ? 'red' : 'inherit' }}>{person.firstName} {person.lastName}</span>
+            {' '}
+            <span style={{ color: '#666' }}>[{calculateAge(person.dob, person.dod) ?? '-'}]</span>
           </li>
         ))}
         </ul>

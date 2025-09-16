@@ -7,7 +7,7 @@ const GENDER_OPTIONS = [
   { value: 'other', label: 'Other' }
 ];
 
-const AddPersonForm = ({ onAdd, persons = [] }) => {
+const AddPersonForm = ({ onAdd, persons = [], initialData = {}, requireDob = true }) => {
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -20,6 +20,14 @@ const AddPersonForm = ({ onAdd, persons = [] }) => {
     notes: ''
   });
 
+  // initialize from initialData when provided (useful for prefill flows like Add Sibling)
+  React.useEffect(() => {
+    if (initialData && Object.keys(initialData).length) {
+      setForm(f => ({ ...f, ...initialData }));
+    }
+    // only respond to changes in initialData
+  }, [initialData]);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -29,7 +37,7 @@ const AddPersonForm = ({ onAdd, persons = [] }) => {
     // Generate a unique personId (e.g., p + timestamp)
     const personId = 'p' + Date.now();
     onAdd({ ...form, personId });
-    setForm({ firstName: '', lastName: '', gender: '', dob: '', dod: '', address: '', notes: '' });
+    setForm({ firstName: '', lastName: '', gender: '', dob: '', dod: '', address: '', notes: '', motherId: '', fatherId: '' });
   };
 
   return (
@@ -44,7 +52,7 @@ const AddPersonForm = ({ onAdd, persons = [] }) => {
           ))}
         </select>
       </div>
-      <div><label>Date of Birth:</label><input name="dob" type="date" value={form.dob} onChange={handleChange} required /></div>
+  <div><label>Date of Birth:</label><input name="dob" type="date" value={form.dob} onChange={handleChange} required={requireDob} /></div>
       <div><label>Date of Death:</label><input name="dod" type="date" value={form.dod} onChange={handleChange} /></div>
       <div><label>Address:</label><input name="address" value={form.address} onChange={handleChange} /></div>
       <div><label>Notes:</label><input name="notes" value={form.notes} onChange={handleChange} /></div>
