@@ -173,6 +173,7 @@ const Persons = () => {
               }}
               onEditSpouse={handleEditSpouse}
               onAddSpouse={handleAddSpouse}
+                onSelectPerson={setSelectedPersonId}
             />
           )
         )}
