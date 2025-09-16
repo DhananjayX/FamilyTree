@@ -14,17 +14,20 @@ const homelabels = {
     {
       icon: "👨‍👩‍👧‍👦",
       title: "Your Family Members",
-      description: "Add and manage family members with detailed profiles"
+      description: "Add and manage family members with detailed profiles",
+      route: "/persons"
     },
     {
       icon: "🌳",
       title: "Your Family Trees",
-      description: "Visualize your family connections in an interactive tree"
+      description: "Visualize your family connections in an interactive tree",
+      route: "/viewtree"
     },   
     {
       icon: "📅",
       title: "Timeline",
-      description: "Track important family events and milestones"
+      description: "Track important family events and milestones",
+      route: "/upcoming"
     }
   ],
 

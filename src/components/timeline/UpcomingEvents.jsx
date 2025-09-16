@@ -12,7 +12,6 @@ function UpcomingEvents() {
 
   return (
     <div className="app-root">
-      <Header />
       <main className="app-main">
         <div className="container">
           <h2>Upcoming Events</h2>

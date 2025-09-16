@@ -6,7 +6,7 @@ const Header = ({ title, subtitle }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === '/' || location.pathname === '/home';
-  const isCompact = location.pathname === '/members';
+  const isCompact = !isHome; // Compact for all routes except home
   const [isNavigating, setIsNavigating] = useState(false);
 
   const handleHomeClick = () => {
