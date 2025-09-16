@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { calculateAge, getParents, getChildren, getSiblings, getSpouses } from '../../utils/familyUtils.js';
 import AddSpouseForm from './addspouseform.jsx';
 
-const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddSpouse }) => {
+const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddSpouse, onSelectPerson }) => {
   const [showAddSpouse, setShowAddSpouse] = useState(false);
   const [editSpouseIdx, setEditSpouseIdx] = useState(null);
 
@@ -34,18 +34,22 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
       <div><strong>Date of Death:</strong> {person.dod || '-'}</div>
       <div><strong>Address:</strong> {person.address || '-'}</div>
       <div><strong>Notes:</strong> {person.notes || '-'}</div>
-      <div style={{ marginTop: 16 }}>
+      <div style={{ marginTop: 10 }}>
         <strong>Parents:</strong>
         <ul>
           {parents.length ? parents.map(p => (
-            <li key={p.personId}>{p.firstName} {p.lastName}</li>
+            <li key={p.personId}>
+              <button onClick={() => onSelectPerson && onSelectPerson(p.personId)} style={{ background: 'transparent', border: 'none', padding: 0, color: '#1976d2', cursor: 'pointer' }}>
+                {p.firstName} {p.lastName}
+              </button>
+            </li>
           )) : <li>None</li>}
         </ul>
       </div>
       <div>
         <strong>Spouses:</strong>
         <button style={{ marginLeft: 8 }} onClick={handleAddSpouse}>Add Spouse</button>
-        <ul style={{ listStyleType: 'disc', paddingLeft: 24 }}>
+        <ul style={{ listStyleType: 'disc', paddingLeft: 0 }}>
           {(person.spouses && person.spouses.length) ? person.spouses.map((sp, idx) => {
             // Find spouse person object
             const spousePerson = persons.find(p => p.personId === sp.spouseId);
@@ -67,8 +71,14 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
                     />
                   ) : (
                     <>
-                      <span style={{ fontWeight: 500 }}>
-                        {spousePerson ? `${spousePerson.firstName} ${spousePerson.lastName}` : `Spouse ID: ${sp.spouseId}`}
+                      <span>
+                        {spousePerson ? (
+                          <button onClick={() => onSelectPerson && onSelectPerson(spousePerson.personId)} style={{ background: 'transparent', border: 'none', padding: 0, color: '#1976d2', cursor: 'pointer' }}>
+                            {spousePerson.firstName} {spousePerson.lastName}
+                          </button>
+                        ) : (
+                          `Spouse ID: ${sp.spouseId}`
+                        )}
                       </span>
                       <button style={{ marginLeft: 8 }} onClick={() => handleEditSpouse(idx)}>Edit Spouse</button>
                       <button
@@ -106,7 +116,11 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
         <strong>Children:</strong>
         <ul>
           {children.length ? children.map(c => (
-            <li key={c.personId}>{c.firstName} {c.lastName}</li>
+            <li key={c.personId}>
+              <button onClick={() => onSelectPerson && onSelectPerson(c.personId)} style={{ background: 'transparent', border: 'none', padding: 0, color: '#1976d2', cursor: 'pointer' }}>
+                {c.firstName} {c.lastName}
+              </button>
+            </li>
           )) : <li>None</li>}
         </ul>
       </div>
@@ -115,7 +129,11 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
         <ul>
           {siblings && siblings.length > 0 ? (
             siblings.map(s => (
-              <li key={s.personId}>{s.firstName} {s.lastName}</li>
+              <li key={s.personId}>
+                <button onClick={() => onSelectPerson && onSelectPerson(s.personId)} style={{ background: 'transparent', border: 'none', padding: 0, color: '#1976d2', cursor: 'pointer' }}>
+                  {s.firstName} {s.lastName}
+                </button>
+              </li>
             ))
           ) : (
             <li>None</li>

@@ -71,10 +71,10 @@ export function getSiblings(person, people) {
   if (!person) return [];
   return people.filter(p => {
     if (p.personId === person.personId) return false;
-    // require both parents to be present and equal
-    if (!person.motherId || !person.fatherId) return false;
-    if (!p.motherId || !p.fatherId) return false;
-    return p.motherId === person.motherId && p.fatherId === person.fatherId;
+    // consider siblings if they share at least one parent (mother or father)
+    const motherMatch = person.motherId && p.motherId && person.motherId === p.motherId;
+    const fatherMatch = person.fatherId && p.fatherId && person.fatherId === p.fatherId;
+    return Boolean(motherMatch || fatherMatch);
   });
 }
 

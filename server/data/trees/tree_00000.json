@@ -3,14 +3,14 @@
   "treeName": "Default Kulkarni Family Tree",
   "creatorEmailId": "admin@familytree.com",
   "createDate": "2024-01-01T00:00:00.000Z",
-  "modifyDate": "2025-09-16T01:21:04.293Z",
+  "modifyDate": "2025-09-16T02:49:49.478Z",
   "treeData": [
     {
       "personId": "p1",
       "firstName": "Narsinh ",
       "lastName": "Kulkarni",
       "gender": "male",
-      "dob": "1952-01-01",
+      "dob": "1952-09-27",
       "dod": null,
       "address": "Kanerwadi",
       "notes": "",
@@ -24,10 +24,10 @@
       "fatherId": "p1757968516644"
     },
     {
-      "firstName": "Dhananjay-Sample",
+      "firstName": "Dhananjay",
       "lastName": "Kulkarni",
       "gender": "male",
-      "dob": "1985-12-12",
+      "dob": "1984-05-30",
       "dod": "",
       "address": "1207 Cypress CT",
       "notes": "",
@@ -417,7 +417,13 @@
       "address": "Pune",
       "notes": "",
       "personId": "p1757968568681",
-      "spouses": [],
+      "spouses": [
+        {
+          "spouseId": "p1757968681461",
+          "marriageDate": "1980-01-01",
+          "divorceDate": ""
+        }
+      ],
       "fatherId": "p1757968516644"
     },
     {
@@ -455,7 +461,13 @@
       "address": "Pune",
       "notes": "",
       "personId": "p1757968681461",
-      "spouses": []
+      "spouses": [
+        {
+          "spouseId": "p1757968568681",
+          "marriageDate": "1980-01-01",
+          "divorceDate": ""
+        }
+      ]
     },
     {
       "firstName": "Shankarrao",
@@ -543,6 +555,19 @@
       "address": "barshi",
       "notes": "",
       "personId": "p1757975100383",
+      "spouses": []
+    },
+    {
+      "firstName": "Mangala",
+      "lastName": "Joshi",
+      "gender": "female",
+      "motherId": "p1757968307056",
+      "fatherId": "p1757968351584",
+      "dob": "1950-09-27",
+      "dod": "",
+      "address": "Pune",
+      "notes": "",
+      "personId": "p1757990961837",
       "spouses": []
     }
   ]

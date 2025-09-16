@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { calculateAge } from '../../utils/familyUtils.js';
 
 
@@ -10,6 +10,18 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
     const fullName = `${person.firstName} ${person.lastName}`.toLowerCase();
     return fullName.includes(searchTerm.toLowerCase());
   });
+
+  const containerRef = useRef(null);
+  const itemRefs = useRef(new Map());
+
+  // when selectedId changes, scroll corresponding item into view
+  useEffect(() => {
+    if (!selectedId) return;
+    const el = itemRefs.current.get(selectedId);
+    if (el && el.scrollIntoView) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [selectedId]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -48,6 +60,7 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
         {filteredPersons.map(person => (
           <li
             key={person.personId}
+            ref={el => { if (el) itemRefs.current.set(person.personId, el); }}
             style={{
               marginBottom: 8,
               cursor: 'pointer',
