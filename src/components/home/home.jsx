@@ -7,14 +7,6 @@ import homelabels from '../../labels/homelabels.js';
 function Home() {
   const navigate = useNavigate();
 
-  const handleFeatureClick = (index) => {
-    if (index === 0) { // "Your Family Members" is the first feature
-      navigate('/members');
-    } else if (index === 2) { // "Timeline" feature
-      navigate('/upcoming');
-    }
-  };
-
   return (
     <main className="app-main">
       <div className="container">          
@@ -25,7 +17,7 @@ function Home() {
               icon={feature.icon}
               title={feature.title}
               description={feature.description}
-              onClick={index === 0 ? () => handleFeatureClick(index) : undefined}
+              route={feature.route}
             />
           ))}
         </div>          
@@ -36,19 +28,7 @@ function Home() {
           >
             More...
           </Button>
-          <Button 
-            variant="primary" 
-            onClick={() => navigate('/viewtree')}
-          >
-            View Tree
-          </Button>
-            <Button
-              variant="primary"
-              onClick={() => navigate('/upcoming')}
-            >
-              Timeline
-            </Button>
-        </div>
+                </div>
       </div>
     </main>
   );
