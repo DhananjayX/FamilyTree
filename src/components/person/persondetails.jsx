@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { calculateAge, getParents, getChildren, getSiblings, getSpouses } from '../../utils/familyUtils.js';
 import AddSpouseForm from './addspouseform.jsx';
+import AddPersonForm from './addpersonform.jsx';
+import AddChildForm from './addchildform.jsx';
 
-const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddSpouse, onSelectPerson }) => {
+const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddSpouse, onAddPerson, onSelectPerson }) => {
   const [showAddSpouse, setShowAddSpouse] = useState(false);
   const [editSpouseIdx, setEditSpouseIdx] = useState(null);
+  const [showAddSiblingForm, setShowAddSiblingForm] = useState(false);
+  const [showAddChildForm, setShowAddChildForm] = useState(false);
 
   if (!person) return <div>Select a person to view details.</div>;
 
@@ -14,6 +18,27 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
   const siblings = getSiblings(person, persons);
   const spouses = getSpouses(person, persons);
 
+  // sort helper: prefer DOB (older first). If DOB missing, fallback to age (older first).
+  const sortByDobOrAge = (a, b) => {
+    const da = a && a.dob ? Date.parse(a.dob) : NaN;
+    const db = b && b.dob ? Date.parse(b.dob) : NaN;
+    if (!isNaN(da) && !isNaN(db)) {
+      // earlier DOB => older => should come first
+      return da - db;
+    }
+    if (!isNaN(da)) return -1;
+    if (!isNaN(db)) return 1;
+    // both no DOB: fallback to age (older first)
+    const ageA = calculateAge(a.dob, a.dod);
+    const ageB = calculateAge(b.dob, b.dod);
+    const valA = (typeof ageA === 'number') ? ageA : -Infinity;
+    const valB = (typeof ageB === 'number') ? ageB : -Infinity;
+    return valB - valA;
+  };
+
+  const sortedChildren = [...children].sort(sortByDobOrAge);
+  const sortedSiblings = [...(siblings || [])].sort(sortByDobOrAge);
+
   // Handler for adding or editing spouse
   const handleAddSpouse = () => setShowAddSpouse(true);
   const handleEditSpouse = idx => setEditSpouseIdx(idx);
@@ -21,6 +46,9 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
     setShowAddSpouse(false);
     setEditSpouseIdx(null);
   };
+
+  const handleAddSibling = () => setShowAddSiblingForm(true);
+  const handleAddSiblingClose = () => setShowAddSiblingForm(false);
 
   return (
     <div style={{ padding: '1rem' }}>
@@ -114,24 +142,48 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
       </div>
       <div>
         <strong>Children:</strong>
+        <button style={{ marginLeft: 8 }} onClick={() => {
+          // open add child form
+          setShowAddChildForm(true);
+        }}>Add Child</button>
         <ul>
-          {children.length ? children.map(c => (
+          {sortedChildren.length ? sortedChildren.map(c => (
             <li key={c.personId}>
-              <button onClick={() => onSelectPerson && onSelectPerson(c.personId)} style={{ background: 'transparent', border: 'none', padding: 0, color: '#1976d2', cursor: 'pointer' }}>
-                {c.firstName} {c.lastName}
+              <button onClick={() => onSelectPerson && onSelectPerson(c.personId)} style={{ background: 'transparent', border: 'none', padding: 0, color: c.dod ? 'red' : '#1976d2', cursor: 'pointer' }}>
+                {c.firstName} {c.lastName} {calculateAge(c.dob, c.dod) !== null ? `(${calculateAge(c.dob, c.dod)})` : ''}
               </button>
             </li>
           )) : <li>None</li>}
         </ul>
+        {showAddChildForm && (
+          <AddChildForm
+            parent={person}
+            // pick first spouse as partner if exists
+            partner={ (person.spouses && person.spouses.length) ? persons.find(p => p.personId === person.spouses[0].spouseId) : null }
+            persons={persons}
+            requireDob={false}
+            onAdd={(newChild) => {
+              // default parents are already set by AddChildForm via initialData
+              if (typeof onAddPerson === 'function') {
+                onAddPerson(newChild);
+              } else if (onEdit) {
+                onEdit(newChild);
+              }
+              setShowAddChildForm(false);
+            }}
+            onCancel={() => setShowAddChildForm(false)}
+          />
+        )}
       </div>
       <div>
         <strong>Siblings:</strong>
+  <button style={{ marginLeft: 8 }} onClick={handleAddSibling}>Add Sibling</button>
         <ul>
-          {siblings && siblings.length > 0 ? (
-            siblings.map(s => (
+          {sortedSiblings && sortedSiblings.length > 0 ? (
+            sortedSiblings.map(s => (
               <li key={s.personId}>
-                <button onClick={() => onSelectPerson && onSelectPerson(s.personId)} style={{ background: 'transparent', border: 'none', padding: 0, color: '#1976d2', cursor: 'pointer' }}>
-                  {s.firstName} {s.lastName}
+                <button onClick={() => onSelectPerson && onSelectPerson(s.personId)} style={{ background: 'transparent', border: 'none', padding: 0, color: s.dod ? 'red' : '#1976d2', cursor: 'pointer' }}>
+                  {s.firstName} {s.lastName} {calculateAge(s.dob, s.dod) !== null ? `(${calculateAge(s.dob, s.dod)})` : ''}
                 </button>
               </li>
             ))
@@ -139,6 +191,27 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
             <li>None</li>
           )}
         </ul>
+        {showAddSiblingForm && (
+          <AddPersonForm
+            persons={persons}
+            initialData={{ motherId: person.motherId || '', fatherId: person.fatherId || '', lastName: person.lastName || '' }}
+            requireDob={false}
+            onAdd={(newPerson) => {
+              // merge any selected values from the form with defaults
+              const prefilled = { ...newPerson };
+              prefilled.motherId = newPerson.motherId || person.motherId || '';
+              prefilled.fatherId = newPerson.fatherId || person.fatherId || '';
+              // call the dedicated add handler if provided by parent
+              if (typeof onAddPerson === 'function') {
+                onAddPerson(prefilled);
+              } else if (onEdit) {
+                // fallback: call onEdit so caller can decide how to handle
+                onEdit(prefilled);
+              }
+              handleAddSiblingClose();
+            }}
+          />
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './header.css';
+import Navigation from '../components/common/Navigation.jsx';
 
 const Header = ({ title, subtitle }) => {
   const location = useLocation();
@@ -26,7 +27,7 @@ const Header = ({ title, subtitle }) => {
   return (
     <header className={`app-header ${isCompact ? 'app-header-compact' : ''}`}>
       <div className="header-content">
-        {!isHome && (
+          {!isHome && (
           <button 
             className={`home-icon-button ${isNavigating ? 'fade-out' : ''}`} 
             onClick={handleHomeClick} 
@@ -36,8 +37,12 @@ const Header = ({ title, subtitle }) => {
         )}
         <div className="app-title">{title}</div>
         {!isCompact && <div className="app-subtitle">{subtitle}</div>}
-      </div>
-    </header>
+        <div className="header-spacer" />
+          <div style={{ marginLeft: 'auto' }}>
+              <Navigation />
+            </div>
+        </div>
+      </header>
   );
 };
 
