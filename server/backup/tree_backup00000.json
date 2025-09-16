@@ -1,10 +1,10 @@
 [
   {
     "personId": "p1",
-    "firstName": "Narsinh ",
-    "lastName": "Kulkarni",
+    "firstName": "John",
+    "lastName": "Doe",
     "gender": "male",
-    "dob": "1952-01-01",
+    "dob": "1950-05-20",
     "dod": null,
     "address": "Kanerwadi",
     "notes": "",
@@ -18,7 +18,7 @@
     "fatherId": "p1757968516644"
   },
   {
-    "firstName": "Dhananjay",
+    "firstName": "Dhananjay-Sample",
     "lastName": "Kulkarni",
     "gender": "male",
     "dob": "1985-12-12",
@@ -75,7 +75,7 @@
     "motherId": "p1757966792265"
   },
   {
-    "firstName": "Rupali",
+    "firstName": "Rupali-Sample",
     "lastName": "Kulkarni",
     "gender": "female",
     "dob": "1985-05-12",
