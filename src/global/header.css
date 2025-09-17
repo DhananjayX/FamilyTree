@@ -80,7 +80,7 @@
 
 /* Compact Header Styles */
 .app-header-compact {
-  padding: 14px 0 8px 0; /* increase compact height to avoid clipping */
+  padding: 20px 10px 15px 10px; /* increase compact height to avoid clipping */
   box-shadow: var(--shadow-light);
 }
 

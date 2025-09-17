@@ -16,16 +16,16 @@
 }
 .ft-nav-link.active {
 	/* calmer off-white with a subtle blue tint to reduce brightness */
-	background: #f3f6fb; /* soft, less-bright background */
+	background: #f8fafc; /* soft, less-bright background */
 	color: #1976d2; /* primary color for active text */
-	box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-	transform: translateY(-1px);
+	/*box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+	transform: translateY(-1px);*/
 }
 .ft-nav-link.active::after {
 	content: '';
 	display: block;
 	height: 3px;
-	background: #e9f1ff; /* calmer underline tone */
+	/*background: #e9f1ff; *//* calmer underline tone */
 	margin-top: 6px;
 	border-radius: 2px;
 }

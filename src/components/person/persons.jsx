@@ -7,6 +7,8 @@ import PersonDetails from './persondetails.jsx';
 import { savePersonsToLocal, savePersonsToBackend, setupAutoSave } from '../../routes/datastore.js';
 import { usePersonsData } from '../../hooks/usePersonsData.js';
 import config from '../../config/index.js';
+import SmallButton from '../common/SmallButton.jsx';
+import Button from '../common/button.jsx';
 
 const Persons = () => {
   // Use the custom hook for persons data management
@@ -143,13 +145,25 @@ const Persons = () => {
         selectedId={selectedPersonId}
       />
       <div style={{ flex: 1, padding: '2rem', maxWidth: 700, margin: '0 auto' }}>
-        <h2>All Persons</h2>
-        <button onClick={() => setShowForm(f => !f)} style={{ marginBottom: '1rem' }}>
-          {showForm ? 'Cancel' : 'Add Person'}
-        </button>
-        <button onClick={handleManualSave} style={{ marginLeft: 8, marginBottom: '1rem' }}>
-          Save to Server
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h2 style={{ margin: 0 }}>
+              {selectedPersonId ? (
+                (() => {
+                  const p = persons.find(x => x.personId === selectedPersonId);
+                  return p ? `${p.firstName} ${p.lastName}` : 'Person';
+                })()
+              ) : 'All Persons'}
+            </h2>
+            <div style={{ fontSize: '0.9rem', color: '#666' }}>{selectedPersonId ? 'Selected person' : 'List of all persons'}</div>
+          </div>
+          <div>
+            <Button variant={showForm ? 'secondary' : 'primary'} className="btn-medium" onClick={() => setShowForm(f => !f)} style={{ marginRight: 8 }}>
+              {showForm ? 'Cancel' : 'Add Member'}
+            </Button>
+            <Button variant="primary" className="btn-medium" onClick={handleManualSave}>Save to Server</Button>
+          </div>
+        </div>
         {/* Show nothing else on initial load */}
   {showForm && <AddPersonForm onAdd={handleAddPerson} persons={persons} />}
         {selectedPersonId && !showForm && (

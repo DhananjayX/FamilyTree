@@ -1,0 +1,79 @@
+.relations-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(360px, 1fr)); /* ensure each column is at least 360px */
+  gap: 16px;
+  width: 100%;
+  align-items: start;
+  padding: 8px 0;
+}
+.relations-row .relation-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0; /* allow children to shrink properly */
+}
+/* don't force a min-height for auto-sized groups */
+.relations-row .relation-group:not(.auto) {
+  min-height: 240px; /* visually reserve space for ~6 list items */
+}
+.relation-group button {
+  font-size: 0.95rem;
+}
+
+.relation-group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+  max-height: 160px; /* default: allow internal scrolling if list is long */
+}
+
+/* highlight the whole list item on hover to show it's active */
+.relation-group ul li {
+  border-radius: 6px;
+  padding: 4px 6px;
+  transition: background-color 0.12s ease, transform 0.06s ease;
+}
+.relation-group ul li:hover {
+  background-color: rgba(25, 118, 210, 0.06); /* subtle blue */
+  transform: translateY(-1px);
+}
+.relation-group ul li:focus-within {
+  background-color: rgba(25, 118, 210, 0.08);
+}
+
+.relation-actions {
+  display: flex;
+  gap: 8px; /* space between action buttons */
+  margin-left: 12px; /* give some left margin so actions are separated from name */
+  align-items: center;
+}
+
+.relation-name{
+  flex: 1 1 auto; /* allow name area to grow/shrink */
+  min-width: 0; /* allow flex child to shrink below content width */
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* hide action buttons by default; show on list item hover */
+.relation-group ul li .relation-actions{visibility:hidden;opacity:0;transition:opacity .12s ease}
+.relation-group ul li:hover .relation-actions{visibility:visible;opacity:1}
+
+/* When editing a person, hide the page blocks */
+.person-editing .relations-row, .person-editing .person-info-card{display:none}
+
+.relation-group.small:not(.auto) {
+  min-height: 140px; /* visually reserve space for ~3 items */
+}
+
+.relation-group.small:not(.auto) ul {
+  max-height: 84px; /* smaller scroll area for 3 items */
+}
+
+@media (max-width: 720px) {
+  .relations-row {
+    grid-template-columns: 1fr; /* stack on small screens */
+  }
+}

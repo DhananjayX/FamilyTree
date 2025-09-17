@@ -1,5 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
+import SmallButton from '../common/SmallButton.jsx';
+import '../common/formcard.css';
 
 // mode: 'add' or 'edit', spouse: spouse object (for edit)
 const AddSpouseForm = ({
@@ -45,45 +47,41 @@ const AddSpouseForm = ({
   };
 
   return (
-    <div style={{ margin: '1rem 0', background: '#f9f9f9', padding: '1rem', borderRadius: 8 }}>
+  <div className="form-card compact">
+      <h3>{mode === 'add' ? 'Add Spouse' : 'Edit Spouse'}</h3>
       <form onSubmit={handleSubmit}>
         {mode === 'add' && (
-          <>
-            <div><strong>Add Spouse</strong></div>
-            <div>
-              <label>Spouse:</label>
-              <select value={spouseId} onChange={e => setSpouseId(e.target.value)} required>
-                <option value="">Select Spouse</option>
-                {availableSpouses.map(p => (
-                  <option key={p.personId} value={p.personId}>{p.firstName} {p.lastName} ({p.gender})</option>
-                ))}
-              </select>
-            </div>
-          </>
+          <div className="form-row">
+            <label>Spouse:</label>
+            <select value={spouseId} onChange={e => setSpouseId(e.target.value)} required>
+              <option value="">Select Spouse</option>
+              {availableSpouses.map(p => (
+                <option key={p.personId} value={p.personId}>{p.firstName} {p.lastName} ({p.gender})</option>
+              ))}
+            </select>
+          </div>
         )}
         {mode === 'edit' && (
-          <>
-            <div><strong>Edit Spouse</strong></div>
-            <div>
-              Spouse Name: {
-                (() => {
-                  const sp = persons.find(p => p.personId === spouseId);
-                  return sp ? `${sp.firstName} ${sp.lastName}` : `Spouse ID: ${spouseId}`;
-                })()
-              }
-            </div>
-          </>
+          <div className="form-row">
+            <label>Spouse Name:</label>
+            <div>{(() => {
+              const sp = persons.find(p => p.personId === spouseId);
+              return sp ? `${sp.firstName} ${sp.lastName}` : `Spouse ID: ${spouseId}`;
+            })()}</div>
+          </div>
         )}
-        <div>
+        <div className="form-row">
           <label>Marriage Date:</label>
           <input type="date" value={marriageDate} onChange={e => setMarriageDate(e.target.value)} required />
         </div>
-        <div>
+        <div className="form-row">
           <label>Divorce Date:</label>
           <input type="date" value={divorceDate} onChange={e => setDivorceDate(e.target.value)} />
         </div>
-        <button type="submit">{mode === 'add' ? 'Add Spouse' : 'Save Changes'}</button>
-        <button type="button" onClick={onCancel} style={{ marginLeft: 8 }}>Cancel</button>
+        <div className="form-actions">
+          <SmallButton type="submit" variant="primary">{mode === 'add' ? 'Add Spouse' : 'Save'}</SmallButton>
+          <SmallButton type="button" variant="neutral" onClick={onCancel} className="form-cancel">Cancel</SmallButton>
+        </div>
       </form>
     </div>
   );

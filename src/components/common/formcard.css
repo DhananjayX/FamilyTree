@@ -1,0 +1,41 @@
+.form-card {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  max-width: 680px;
+  margin: 0.5rem auto;
+}
+.form-card h3 { margin: 0 0 8px 0; }
+.form-row { display: flex; gap: 12px; margin: 8px 0; align-items: center; }
+.form-row label { min-width: 110px; font-weight: 600; }
+.form-actions { margin-top: 12px; display: flex; gap: 8px; justify-content: flex-start; }
+.form-cancel { margin-left: 8px; }
+
+@media (max-width: 720px) {
+  .form-row { flex-direction: column; align-items: stretch; }
+  .form-row label { min-width: 0; }
+}
+
+/* two-column row: put two fields side-by-side (label + control each) */
+.form-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  align-items: center;
+}
+.form-two .form-row { margin: 4px 0; }
+.form-two label { min-width: 0; }
+
+@media (max-width: 720px) {
+  .form-two { grid-template-columns: 1fr; }
+}
+
+/* compact variant: reduced padding and tighter spacing */
+.form-card.compact {
+  padding: 10px;
+}
+.form-card.compact .form-row { margin: 6px 0; gap: 8px; }
+.form-card.compact .form-actions { margin-top: 8px; gap: 6px; }
+.form-card.compact .form-row label { min-width: 90px; font-weight: 600; }

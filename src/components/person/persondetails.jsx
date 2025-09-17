@@ -3,12 +3,14 @@ import { calculateAge, getParents, getChildren, getSiblings, getSpouses } from '
 import AddSpouseForm from './addspouseform.jsx';
 import AddPersonForm from './addpersonform.jsx';
 import AddChildForm from './addchildform.jsx';
+import './persondetails.css';
 
 const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddSpouse, onAddPerson, onSelectPerson }) => {
   const [showAddSpouse, setShowAddSpouse] = useState(false);
   const [editSpouseIdx, setEditSpouseIdx] = useState(null);
   const [showAddSiblingForm, setShowAddSiblingForm] = useState(false);
   const [showAddChildForm, setShowAddChildForm] = useState(false);
+  
 
   if (!person) return <div>Select a person to view details.</div>;
 
@@ -49,7 +51,6 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
 
   const handleAddSibling = () => setShowAddSiblingForm(true);
   const handleAddSiblingClose = () => setShowAddSiblingForm(false);
-
   return (
     <div style={{ padding: '1rem' }}>
       <h2>
@@ -135,7 +136,8 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
               if (onAddSpouse) onAddSpouse(person.personId, spouseData);
               handleSpouseFormClose();
             }}
-            onEditSpouse={() => {}}
+            onEditSpouse={() => {}
+            }
             onCancel={handleSpouseFormClose}
           />
         )}
@@ -213,6 +215,8 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
           />
         )}
       </div>
+
+      
     </div>
   );
 };

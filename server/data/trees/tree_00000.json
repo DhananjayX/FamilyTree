@@ -3,7 +3,7 @@
   "treeName": "Default Kulkarni Family Tree",
   "creatorEmailId": "admin@familytree.com",
   "createDate": "2024-01-01T00:00:00.000Z",
-  "modifyDate": "2025-09-17T00:07:00.995Z",
+  "modifyDate": "2025-09-17T13:32:22.409Z",
   "treeData": [
     {
       "personId": "p1",
@@ -147,7 +147,13 @@
       "address": "Ter",
       "notes": "",
       "personId": "p1757956042650",
-      "spouses": [],
+      "spouses": [
+        {
+          "spouseId": "p1757966792265",
+          "marriageDate": "1940-01-01",
+          "divorceDate": ""
+        }
+      ],
       "fatherId": "p1757967163504"
     },
     {
@@ -289,7 +295,13 @@
       "address": "Ter",
       "notes": "",
       "personId": "p1757966792265",
-      "spouses": []
+      "spouses": [
+        {
+          "spouseId": "p1757956042650",
+          "marriageDate": "1940-01-01",
+          "divorceDate": ""
+        }
+      ]
     },
     {
       "firstName": "Lata",
@@ -1309,7 +1321,13 @@
       "address": "Aurngabad",
       "notes": "",
       "personId": "p1758053533417",
-      "spouses": []
+      "spouses": [
+        {
+          "spouseId": "p1758113974277",
+          "marriageDate": "1997-05-05",
+          "divorceDate": ""
+        }
+      ]
     },
     {
       "firstName": "Dhananjay",
@@ -1419,7 +1437,13 @@
       "address": "Beed",
       "notes": "",
       "personId": "p1758058498928",
-      "spouses": []
+      "spouses": [
+        {
+          "spouseId": "p1758115765385",
+          "marriageDate": "1992-01-01",
+          "divorceDate": ""
+        }
+      ]
     },
     {
       "firstName": "Pratibha",
@@ -1555,6 +1579,226 @@
       "address": "",
       "notes": "",
       "personId": "p1758061527355",
+      "spouses": []
+    },
+    {
+      "firstName": "Pratiksha",
+      "lastName": "Kete",
+      "gender": "female",
+      "motherId": "",
+      "fatherId": "p1758058461061",
+      "dob": "2005-01-01",
+      "dod": "",
+      "address": "Beed",
+      "notes": "",
+      "personId": "p1758077798235",
+      "spouses": []
+    },
+    {
+      "firstName": "Pranav",
+      "lastName": "Kete",
+      "gender": "male",
+      "motherId": "",
+      "fatherId": "p1758058461061",
+      "dob": "2008-01-01",
+      "dod": "",
+      "address": "Beed",
+      "notes": "",
+      "personId": "p1758077847903",
+      "spouses": []
+    },
+    {
+      "firstName": "Ira",
+      "lastName": "Inamdar",
+      "gender": "female",
+      "motherId": "",
+      "fatherId": "p1758061527355",
+      "dob": "2018-09-09",
+      "dod": "",
+      "address": "Pune",
+      "notes": "",
+      "personId": "p1758113801135",
+      "spouses": []
+    },
+    {
+      "firstName": "Aditi",
+      "lastName": "Dandavate",
+      "gender": "female",
+      "motherId": "p1758061498640",
+      "fatherId": "",
+      "dob": "2008-01-01",
+      "dod": "",
+      "address": "",
+      "notes": "",
+      "personId": "p1758113840632",
+      "spouses": []
+    },
+    {
+      "firstName": "Gargi",
+      "lastName": "Dandvate",
+      "gender": "female",
+      "motherId": "p1758061498640",
+      "fatherId": "",
+      "dob": "2012-01-01",
+      "dod": "",
+      "address": "",
+      "notes": "",
+      "personId": "p1758113867796",
+      "spouses": []
+    },
+    {
+      "firstName": "Manisha",
+      "lastName": "Sahotre",
+      "gender": "female",
+      "motherId": "",
+      "fatherId": "",
+      "dob": "1970-01-01",
+      "dod": "",
+      "address": "",
+      "notes": "",
+      "personId": "p1758113974277",
+      "spouses": [
+        {
+          "spouseId": "p1758053533417",
+          "marriageDate": "1997-05-05",
+          "divorceDate": ""
+        }
+      ]
+    },
+    {
+      "firstName": "Vaishnavi",
+      "lastName": "Sahotre",
+      "gender": "female",
+      "motherId": "p1758113974277",
+      "fatherId": "p1758053533417",
+      "dob": "1998-01-01",
+      "dod": "",
+      "address": "",
+      "notes": "",
+      "personId": "p1758114057195",
+      "spouses": []
+    },
+    {
+      "firstName": "Vaibhavi",
+      "lastName": "Sahotre",
+      "gender": "female",
+      "motherId": "p1758113974277",
+      "fatherId": "p1758053533417",
+      "dob": "2000-01-01",
+      "dod": "",
+      "address": "",
+      "notes": "",
+      "personId": "p1758114081801",
+      "spouses": []
+    },
+    {
+      "firstName": "Prabhakar",
+      "lastName": "Kulkarni",
+      "gender": "male",
+      "motherId": "",
+      "fatherId": "p1757967163504",
+      "dob": "1922-01-01",
+      "dod": "1995-01-01",
+      "address": "Ter",
+      "notes": "",
+      "personId": "p1758114188964",
+      "spouses": []
+    },
+    {
+      "firstName": "Shantabai",
+      "lastName": "Kulkarni",
+      "gender": "female",
+      "motherId": "",
+      "fatherId": "p1757967163504",
+      "dob": "1925-01-01",
+      "dod": "2000-01-01",
+      "address": "Pandharpur",
+      "notes": "",
+      "personId": "p1758114218376",
+      "spouses": []
+    },
+    {
+      "firstName": "Kamlakar",
+      "lastName": "Kulkarni",
+      "gender": "female",
+      "motherId": "",
+      "fatherId": "p1757967163504",
+      "dob": "1927-01-01",
+      "dod": "2015-01-01",
+      "address": "Ter",
+      "notes": "",
+      "personId": "p1758114244966",
+      "spouses": []
+    },
+    {
+      "firstName": "Pama",
+      "lastName": "Kulkarni",
+      "gender": "female",
+      "motherId": "",
+      "fatherId": "p1758114188964",
+      "dob": "1952-01-01",
+      "dod": "",
+      "address": "Solapur",
+      "notes": "",
+      "personId": "p1758114408169",
+      "spouses": []
+    },
+    {
+      "firstName": "Vijaya",
+      "lastName": "Kete",
+      "gender": "female",
+      "motherId": "",
+      "fatherId": "",
+      "dob": "1965-02-02",
+      "dod": "",
+      "address": "Beed",
+      "notes": "",
+      "personId": "p1758115765385",
+      "spouses": [
+        {
+          "spouseId": "p1758058498928",
+          "marriageDate": "1992-01-01",
+          "divorceDate": ""
+        }
+      ]
+    },
+    {
+      "firstName": "Prasad",
+      "lastName": "Kete",
+      "gender": "male",
+      "motherId": "p1758115765385",
+      "fatherId": "p1758058498928",
+      "dob": "1995-01-01",
+      "dod": "",
+      "address": "Beed",
+      "notes": "",
+      "personId": "p1758115860114",
+      "spouses": []
+    },
+    {
+      "firstName": "Pratik",
+      "lastName": "Kete",
+      "gender": "male",
+      "motherId": "p1758115765385",
+      "fatherId": "p1758058498928",
+      "dob": "1997-01-01",
+      "dod": "",
+      "address": "Beed",
+      "notes": "",
+      "personId": "p1758115883876",
+      "spouses": []
+    },
+    {
+      "firstName": "Vaibhav",
+      "lastName": "Kulkarni",
+      "gender": "male",
+      "motherId": "p1758058548732",
+      "fatherId": "",
+      "dob": "1999-01-01",
+      "dod": "",
+      "address": "",
+      "notes": "",
+      "personId": "p1758115927157",
       "spouses": []
     }
   ]

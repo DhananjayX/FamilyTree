@@ -1,0 +1,13 @@
+/* Simple bordered card for person info */
+.person-info-card{
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(255,255,255,0.02);
+  margin-bottom: 8px;
+}
+.person-info-card h2{margin:0 0 8px 0}
+.person-info-rows{display:flex;flex-direction:column;gap:6px}
+.person-info-row{display:flex;gap:8px;align-items:center}
+.person-info-row strong{width:80px;flex-shrink:0}
+.person-info-notes{margin-top:8px}

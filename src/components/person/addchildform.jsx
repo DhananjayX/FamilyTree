@@ -1,5 +1,6 @@
 import React from 'react';
 import AddPersonForm from './addpersonform.jsx';
+import '../common/formcard.css';
 
 // Simple wrapper for AddPersonForm to represent adding a child
 const AddChildForm = ({ parent, partner, persons, onAdd, requireDob = true, onCancel }) => {
@@ -14,7 +15,8 @@ const AddChildForm = ({ parent, partner, persons, onAdd, requireDob = true, onCa
   };
 
   return (
-    <div>
+  <div className="form-card compact">
+      <h3>Add Child</h3>
       <AddPersonForm
         persons={persons}
         initialData={initialData}
@@ -22,8 +24,8 @@ const AddChildForm = ({ parent, partner, persons, onAdd, requireDob = true, onCa
         onAdd={(person) => {
           if (onAdd) onAdd(person);
         }}
+        onCancel={onCancel}
       />
-      {onCancel && <button onClick={onCancel} style={{ marginTop: 8 }}>Cancel</button>}
     </div>
   );
 };

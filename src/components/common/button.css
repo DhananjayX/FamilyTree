@@ -36,3 +36,9 @@
   color: white;
   transform: translateY(-2px);
 }
+
+/* size helpers */
+.btn-medium {
+  padding: 0.5rem 0.9rem; /* medium compact size */
+  font-size: 0.95rem;
+}
