@@ -53,7 +53,7 @@ const PersonDetails = ({ person, persons, onEdit, onDelete, onEditSpouse, onAddS
   return (
     <div style={{ padding: '1rem' }}>
       <h2>
-  {person.firstName} {person.lastName} {age !== null ? `(${age})` : ''}
+  {person.firstName} {' '} {person.lastName} {age !== null ? `(${age})` : ''}
         <button style={{ marginLeft: 16 }} onClick={() => onEdit && onEdit(person.personId)}>Edit</button>
         <button style={{ marginLeft: 8, color: 'red' }} onClick={() => onDelete && onDelete(person.personId)}>Delete</button>
       </h2>

@@ -3,7 +3,7 @@
   "treeName": "Default Kulkarni Family Tree",
   "creatorEmailId": "admin@familytree.com",
   "createDate": "2024-01-01T00:00:00.000Z",
-  "modifyDate": "2025-09-16T21:44:56.046Z",
+  "modifyDate": "2025-09-17T00:07:00.995Z",
   "treeData": [
     {
       "personId": "p1",
@@ -532,7 +532,13 @@
       "address": "barshi",
       "notes": "",
       "personId": "p1757975024552",
-      "spouses": []
+      "spouses": [
+        {
+          "spouseId": "p1758061378384",
+          "marriageDate": "1978-01-01",
+          "divorceDate": ""
+        }
+      ]
     },
     {
       "firstName": "Rekha",
@@ -1478,6 +1484,77 @@
       "address": "Beed",
       "notes": "",
       "personId": "p1758059093655",
+      "spouses": []
+    },
+    {
+      "firstName": "Amey",
+      "lastName": "Deshmukh",
+      "gender": "male",
+      "motherId": "p1758052677345",
+      "fatherId": "",
+      "dob": "2000-01-01",
+      "dod": "",
+      "address": "Austreliya",
+      "notes": "",
+      "personId": "p1758061297020",
+      "spouses": []
+    },
+    {
+      "firstName": "Sharad",
+      "lastName": "Inamdar",
+      "gender": "male",
+      "motherId": "",
+      "fatherId": "",
+      "dob": "1951-01-01",
+      "dod": "",
+      "address": "Uplai",
+      "notes": "",
+      "personId": "p1758061378384",
+      "spouses": [
+        {
+          "spouseId": "p1757975024552",
+          "marriageDate": "1978-01-01",
+          "divorceDate": ""
+        }
+      ]
+    },
+    {
+      "firstName": "Sonal",
+      "lastName": "Inamdar",
+      "gender": "female",
+      "motherId": "p1757975024552",
+      "fatherId": "p1758061378384",
+      "dob": "1979-01-01",
+      "dod": "",
+      "address": "",
+      "notes": "",
+      "personId": "p1758061474665",
+      "spouses": []
+    },
+    {
+      "firstName": "Snehal",
+      "lastName": "Inamdar",
+      "gender": "female",
+      "motherId": "p1757975024552",
+      "fatherId": "p1758061378384",
+      "dob": "1981-01-01",
+      "dod": "",
+      "address": "",
+      "notes": "",
+      "personId": "p1758061498640",
+      "spouses": []
+    },
+    {
+      "firstName": "Ruturaj",
+      "lastName": "Inamdar",
+      "gender": "male",
+      "motherId": "p1757975024552",
+      "fatherId": "p1758061378384",
+      "dob": "1983-11-21",
+      "dod": "",
+      "address": "",
+      "notes": "",
+      "personId": "p1758061527355",
       "spouses": []
     }
   ]

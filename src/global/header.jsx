@@ -38,9 +38,11 @@ const Header = ({ title, subtitle }) => {
         <div className="app-title">{title}</div>
         {!isCompact && <div className="app-subtitle">{subtitle}</div>}
         <div className="header-spacer" />
-          <div style={{ marginLeft: 'auto' }}>
-              <Navigation />
-            </div>
+        {!isHome && (
+          <div className="header-nav">
+            <Navigation />
+          </div>
+        )}
         </div>
       </header>
   );

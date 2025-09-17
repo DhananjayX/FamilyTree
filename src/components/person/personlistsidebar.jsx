@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { calculateAge } from '../../utils/familyUtils.js';
+import memberslabels from '../../labels/memberslabels.js';
 
 
 const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
@@ -30,29 +31,37 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
 
   return (
   <aside style={{ width: 240, minWidth: 220, float: 'left', borderRight: '1px solid #eee', height: '100%', padding: '1rem 0.5rem', boxSizing: 'border-box', background: '#fafbfc' }}>
-      <h3 style={{ fontSize: '1.1rem', marginBottom: 12 }}>Persons List </h3>
+  <h3 style={{ fontSize: '1.1rem', marginBottom: 12 }}>{memberslabels.header.title}</h3>
       <form onSubmit={handleSearch} style={{ marginBottom: 12, display: 'flex', gap: 4 }}>
         <input
           type="text"
-          placeholder="Search person..."
+          placeholder={memberslabels.controls.search}
           value={search}
           onChange={e => setSearch(e.target.value)}
           style={{ flex: 1, padding: '4px 6px', borderRadius: 4, border: '1px solid #ccc' }}
         />
         <button
           type="submit"
+          aria-label="Search"
+          title="Search"
           style={{
-            padding: '4px 10px',
+            width: 36,
+            height: 36,
+            padding: 6,
             background: '#1976d2',
             color: 'white',
             border: '1px solid #1976d2',
-            borderRadius: 4,
-            fontWeight: 600,
-            cursor: 'pointer',
-            minWidth: 60
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer'
           }}
         >
-          Search
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
         </button>
       </form>
       <div style={{ maxHeight: 'calc(100vh - 160px)', overflow: 'auto' }}>

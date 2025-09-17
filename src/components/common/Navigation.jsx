@@ -1,15 +1,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import homelabels from '../../labels/homelabels';
 import './navigation.css';
 
 const Navigation = ({ className = '' }) => {
+  const items = (homelabels && homelabels.featuresData) || [];
+
   return (
     <nav className={`ft-nav ${className}`}>
-      <NavLink to="/" end className="ft-nav-link">Home</NavLink>
-      <NavLink to="/members" className="ft-nav-link">Members</NavLink>
-      <NavLink to="/persons" className="ft-nav-link">Persons</NavLink>
-      <NavLink to="/viewtree" className="ft-nav-link">View Tree</NavLink>
-      <NavLink to="/upcoming" className="ft-nav-link">Timeline</NavLink>
+      {items.map((it, idx) => (
+        <NavLink key={idx} to={it.route || '/'} className="ft-nav-link">
+          {it.title2 || it.title}
+        </NavLink>
+      ))}
     </nav>
   );
 };
