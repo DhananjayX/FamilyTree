@@ -3,7 +3,7 @@
   "treeName": "Kulkarni's",
   "creatorEmailId": "admin@familytree.com",
   "createDate": "2024-01-01T00:00:00.000Z",
-  "modifyDate": "2025-09-28T18:40:55.198Z",
+  "modifyDate": "2025-09-28T20:05:16.341Z",
   "treeData": [
     {
       "personId": "p1",
@@ -133,7 +133,9 @@
           "marriageDate": "1983-01-01",
           "divorceDate": ""
         }
-      ]
+      ],
+      "fatherId": "p1759087679397",
+      "motherId": "p1759087805074"
     },
     {
       "firstName": "Devidasrao",
@@ -608,6 +610,32 @@
       "address": "",
       "notes": "",
       "personId": "p1759083397112",
+      "spouses": []
+    },
+    {
+      "firstName": "Prabhakar",
+      "lastName": "Kete",
+      "gender": "male",
+      "motherId": "",
+      "fatherId": "",
+      "dob": "1940-02-14",
+      "dod": "2011-10-11",
+      "address": "Beed",
+      "notes": "",
+      "personId": "p1759087679397",
+      "spouses": []
+    },
+    {
+      "firstName": "Sushila",
+      "lastName": "Kete",
+      "gender": "female",
+      "motherId": "",
+      "fatherId": "",
+      "dob": "1942-01-06",
+      "dod": "",
+      "address": "Beed",
+      "notes": "",
+      "personId": "p1759087805074",
       "spouses": []
     }
   ]

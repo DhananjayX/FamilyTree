@@ -87,15 +87,8 @@ const ViewTree = () => {
 			<div style={{ flex: 1, padding: '1rem' }}>
 				<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
 					<h2 style={{ margin: 0 }}>
-						{treeMetadata?.treeName || 'Family Tree'}
+						{treeMetadata?.treeName || 'Family Tree'} {" Family"}
 					</h2>
-					{selectedPerson && (
-						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-							<span style={{ fontSize: '0.9rem', color: '#666' }}>
-								Selected: {selectedPerson.firstName} {selectedPerson.lastName}
-							</span>
-						</div>
-					)}
 				</div>
 				{selectedPerson ? (
 					<ErrorBoundary>
