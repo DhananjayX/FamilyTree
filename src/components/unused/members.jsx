@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import MemberLite from './MemberLite';
+import MemberLite from './memberlite';
 import AddMember from './addmember';
 import TreesPanel from './treespanel';
 import config from '../../../config/dev.config';

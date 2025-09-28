@@ -1,7 +1,7 @@
 // Members Component Labels
 const memberslabels = {
   header: {
-    title: "Family Tree Members",
+    title: "Family Members",
     treeInfo: (treeId, count) => `Tree ID: ${treeId} • ${count} members`
   },
   buttons: {

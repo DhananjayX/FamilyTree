@@ -1,16 +1,83 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { calculateAge } from '../../utils/familyUtils.js';
 import memberslabels from '../../labels/memberslabels.js';
+import './personlistsidebar.css';
+
+// Helper function to determine age pill class and label
+const getAgePillClass = (age) => {
+  if (age === null || age === undefined || age === '-') {
+    return {
+      className: 'age-pill unknown',
+      label: '-'
+    };
+  }
+  
+  if (age >= 65) {
+    return {
+      className: 'age-pill elderly',
+      label: `${age}`
+    };
+  } else if (age >= 18) {
+    return {
+      className: 'age-pill adult',
+      label: `${age}`
+    };
+  } else if (age >= 13) {
+    return {
+      className: 'age-pill teen',
+      label: `${age}`
+    };
+  } else {
+    return {
+      className: 'age-pill child',
+      label: `${age}`
+    };
+  }
+};
 
 
 const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
-  const [search, setSearch] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState('name'); // 'name' or 'age'
+  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
+  
+  const PAGE_SIZE = 12;
 
   const filteredPersons = persons.filter(person => {
+    // Show all when search is empty
+    if (!searchTerm.trim()) return true;
+    
     const fullName = `${person.firstName} ${person.lastName}`.toLowerCase();
     return fullName.includes(searchTerm.toLowerCase());
   });
+
+  // Sort filtered persons
+  const sortedPersons = [...filteredPersons].sort((a, b) => {
+    if (sortBy === 'name') {
+      const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
+      const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
+      return sortOrder === 'asc' 
+        ? nameA.localeCompare(nameB)
+        : nameB.localeCompare(nameA);
+    } else if (sortBy === 'age') {
+      const ageA = calculateAge(a.dob, a.dod) ?? -1;
+      const ageB = calculateAge(b.dob, b.dod) ?? -1;
+      return sortOrder === 'asc' ? ageA - ageB : ageB - ageA;
+    }
+    return 0;
+  });
+
+  // Pagination calculations
+  const totalPages = Math.ceil(sortedPersons.length / PAGE_SIZE);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const paginatedPersons = sortedPersons.slice(startIndex, endIndex);
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   const containerRef = useRef(null);
   const itemRefs = useRef(new Map());
@@ -24,69 +91,138 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
     }
   }, [selectedId]);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setSearchTerm(search);
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSortClick = (newSortBy) => {
+    if (sortBy === newSortBy) {
+      // Toggle sort order if same sort type
+      setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Set new sort type with ascending order
+      setSortBy(newSortBy);
+      setSortOrder('asc');
+    }
+    setCurrentPage(1); // Reset to first page when sorting changes
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages));
   };
 
   return (
-  <aside style={{ width: 240, minWidth: 220, float: 'left', borderRight: '1px solid #eee', height: '100%', padding: '1rem 0.5rem', boxSizing: 'border-box', background: '#fafbfc' }}>
-  <h3 style={{ fontSize: '1.1rem', marginBottom: 12 }}>{memberslabels.header.title}</h3>
-      <form onSubmit={handleSearch} style={{ marginBottom: 12, display: 'flex', gap: 4 }}>
+    <aside className="person-list-sidebar">
+      <h3 className="person-list-header">{memberslabels.header.title}</h3>
+      <div className="person-list-search-container">
         <input
           type="text"
           placeholder={memberslabels.controls.search}
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          style={{ flex: 1, padding: '4px 6px', borderRadius: 4, border: '1px solid #ccc' }}
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="person-list-search-input"
         />
-        <button
-          type="submit"
-          aria-label="Search"
-          title="Search"
-          style={{
-            width: 36,
-            height: 36,
-            padding: 6,
-            background: '#1976d2',
-            color: 'white',
-            border: '1px solid #1976d2',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer'
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <circle cx="11" cy="11" r="7"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-      </form>
-      <div style={{ maxHeight: 'calc(100vh - 160px)', overflow: 'auto' }}>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-        {filteredPersons.map(person => (
-          <li
-            key={person.personId}
-            ref={el => { if (el) itemRefs.current.set(person.personId, el); }}
-            style={{
-              marginBottom: 8,
-              cursor: 'pointer',
-              fontWeight: selectedId === person.personId ? 'bold' : 'normal',
-              background: selectedId === person.personId ? '#e6f0fa' : 'transparent',
-              borderRadius: 4,
-              padding: '4px 8px'
-            }}
-            onClick={() => onSelect && onSelect(person.personId)}
+      </div>
+      
+      {/* Sorting Options */}
+      <div className="sort-container">
+        <span className="sort-label">Sort by:</span>
+        <div className="sort-buttons">
+          <button
+            onClick={() => handleSortClick('name')}
+            className={`sort-btn ${sortBy === 'name' ? 'active' : ''}`}
+            title="Sort by Name"
           >
-            <span style={{ color: person.dod ? 'red' : 'inherit' }}>{person.firstName} {person.lastName}</span>
-            {' '}
-            <span style={{ color: '#666' }}>[{calculateAge(person.dob, person.dod) ?? '-'}]</span>
-          </li>
-        ))}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 6h18M3 12h12M3 18h6"/>
+            </svg>
+            {sortBy === 'name' && (
+              <span className="sort-arrow">
+                {sortOrder === 'asc' ? '↑' : '↓'}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => handleSortClick('age')}
+            className={`sort-btn ${sortBy === 'age' ? 'active' : ''}`}
+            title="Sort by Age"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12,6 12,12 16,14"/>
+            </svg>
+            {sortBy === 'age' && (
+              <span className="sort-arrow">
+                {sortOrder === 'asc' ? '↑' : '↓'}
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
+
+      <div className="person-list-container">
+        <ul className="person-list">
+        {paginatedPersons.map(person => {
+          const age = calculateAge(person.dob, person.dod);
+          const agePill = getAgePillClass(age);
+          
+          // Add deceased class to age pill if person is deceased
+          const agePillClassName = person.dod 
+            ? `${agePill.className} deceased` 
+            : agePill.className;
+          
+          return (
+            <li
+              key={person.personId}
+              ref={el => { if (el) itemRefs.current.set(person.personId, el); }}
+              className={`person-list-item ${selectedId === person.personId ? 'selected' : ''}`}
+              onClick={() => onSelect && onSelect(person.personId)}
+            >
+              <span 
+                className={`person-name ${person.dod ? 'deceased' : ''}`}
+                title={`${person.firstName} ${person.lastName}`}
+              >
+                {person.firstName} {person.lastName}
+              </span>
+              <span className={agePillClassName}>
+                {agePill.label}
+              </span>
+            </li>
+          );
+        })}
         </ul>
       </div>
+      
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="pagination-container">
+          <button 
+            onClick={handlePrevPage} 
+            disabled={currentPage === 1}
+            className="pagination-btn"
+            aria-label="Previous page"
+          >
+            ‹
+          </button>
+          
+          <span className="pagination-info">
+            {currentPage} of {totalPages}
+          </span>
+          
+          <button 
+            onClick={handleNextPage} 
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+            aria-label="Next page"
+          >
+            ›
+          </button>
+        </div>
+      )}
     </aside>
   );
 };

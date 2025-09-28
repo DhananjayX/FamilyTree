@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 import App from './global/app.jsx';
 import Home from './components/home/home.jsx';
-import Members from './components/members/members.jsx';
 import Persons from './components/person/persons.jsx';
 import ViewTree from './components/familyTree/ViewTree.jsx';
 import UpcomingEvents from './components/timeline/UpcomingEvents.jsx';
@@ -16,7 +15,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
-          <Route path="members" element={<Members />} />
           <Route path="persons" element={<Persons />} />
           <Route path="viewtree" element={<ViewTree />} />
           <Route path="upcoming" element={<UpcomingEvents />} />
