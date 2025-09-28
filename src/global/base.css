@@ -7,7 +7,7 @@
 
 .app-main {
   flex: 1;
-  padding: var(--spacing-3xl) 0;
+  /* Remove fixed padding to allow pages to control their own spacing */
 }
 
 /* Container Styles */

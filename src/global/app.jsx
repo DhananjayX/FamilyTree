@@ -14,7 +14,9 @@ function App() {
         subtitle={homelabels.headerData.subtitle} 
       />
       
-      <Outlet />
+      <main className="app-main">
+        <Outlet />
+      </main>
       
       <Footer 
         text={homelabels.footerData.text}

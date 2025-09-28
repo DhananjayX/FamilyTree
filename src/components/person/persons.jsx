@@ -17,7 +17,40 @@ const Persons = () => {
   const [showForm, setShowForm] = useState(false);
   const [addingSpouseFor, setAddingSpouseFor] = useState(null);
   const [editingPersonId, setEditingPersonId] = useState(null);
-  const [selectedPersonId, setSelectedPersonId] = useState(null);
+  
+  // Initialize selected person from localStorage or null (same key as ViewTree)
+  const [selectedPersonId, setSelectedPersonId] = useState(() => {
+    try {
+      return localStorage.getItem('familyTree_selectedPersonId') || null;
+    } catch (error) {
+      console.warn('Failed to read selectedPersonId from localStorage:', error);
+      return null;
+    }
+  });
+
+  // Save selectedPersonId to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      if (selectedPersonId) {
+        localStorage.setItem('familyTree_selectedPersonId', selectedPersonId);
+      } else {
+        localStorage.removeItem('familyTree_selectedPersonId');
+      }
+    } catch (error) {
+      console.warn('Failed to save selectedPersonId to localStorage:', error);
+    }
+  }, [selectedPersonId]);
+
+  // Validate that the stored selectedPersonId exists in the current persons list
+  useEffect(() => {
+    if (selectedPersonId && persons.length > 0) {
+      const personExists = persons.some(p => p.personId === selectedPersonId);
+      if (!personExists) {
+        // If stored person doesn't exist in current data, clear the selection
+        setSelectedPersonId(null);
+      }
+    }
+  }, [selectedPersonId, persons]);
 
   const handleAddPerson = (person) => {
     setPersons([...persons, { ...person, spouses: [] }]);

@@ -108,10 +108,27 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
   // height = top padding + ancestor levels + center person + descendant levels + bottom padding
   const computedHeight = height || (topPadding + (actualAncestorLevels * levelGap) + nodeHeight + (actualDescendantLevels * levelGap) + topPadding);
 
-  const { nodes, links } = useMemo(() => {
-    if (!centerPerson) return { nodes: [], links: [] };
+  const { nodes, links, treeWidth } = useMemo(() => {
+    if (!centerPerson) return { nodes: [], links: [], treeWidth: width };
 
-    const centerX = width / 2;
+    // Calculate required width for all levels
+    const allLevels = [
+      ...ancestorLevels,
+      [centerPerson], // center person as single-item level
+      ...descendantLevels
+    ];
+    
+    const minMargin = 20;
+    const maxLevelWidth = Math.max(...allLevels.map(levelArray => {
+      const n = levelArray.length;
+      const totalNodeWidth = n * nodeWidth;
+      const totalMarginWidth = (n - 1) * minMargin;
+      return totalNodeWidth + totalMarginWidth + (2 * minMargin); // add padding on sides
+    }));
+    
+    const actualTreeWidth = Math.max(width, maxLevelWidth);
+    const centerX = actualTreeWidth / 2;
+    
     // Position center person based on actual ancestor levels, not in middle of computed height
     const centerY = topPadding + (actualAncestorLevels * levelGap) + (nodeHeight / 2);
 
@@ -123,7 +140,17 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
       const level = idx + 1;
       const y = centerY - level * levelGap;
       const n = levelArray.length;
-      const spacing = Math.max(100, width / (n + 1));
+      
+      // Calculate spacing with minimum margin between nodes
+      const minMargin = 20; // minimum space between nodes
+      const totalNodeWidth = n * nodeWidth;
+      const totalMarginWidth = (n - 1) * minMargin;
+      const requiredWidth = totalNodeWidth + totalMarginWidth;
+      
+      // Use larger of: required width or actual tree width
+      const effectiveWidth = Math.max(requiredWidth, actualTreeWidth);
+      const spacing = effectiveWidth / (n + 1);
+      
       levelArray.forEach((p, j) => {
         const x = spacing * (j + 1);
         nodesMap.set(p.personId, { person: p, x, y });
@@ -135,7 +162,17 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
       const level = idx + 1;
       const y = centerY + level * levelGap;
       const n = levelArray.length;
-      const spacing = Math.max(100, width / (n + 1));
+      
+      // Calculate spacing with minimum margin between nodes
+      const minMargin = 20; // minimum space between nodes
+      const totalNodeWidth = n * nodeWidth;
+      const totalMarginWidth = (n - 1) * minMargin;
+      const requiredWidth = totalNodeWidth + totalMarginWidth;
+      
+      // Use larger of: required width or actual tree width
+      const effectiveWidth = Math.max(requiredWidth, actualTreeWidth);
+      const spacing = effectiveWidth / (n + 1);
+      
       levelArray.forEach((p, j) => {
         const x = spacing * (j + 1);
         nodesMap.set(p.personId, { person: p, x, y });
@@ -157,15 +194,15 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
       });
     });
 
-    return { nodes: Array.from(nodesMap.values()), links: linksArr };
-  }, [centerPerson, people, width, computedHeight, ancestorLevels, descendantLevels, actualAncestorLevels, topPadding, levelGap, nodeHeight]);
+    return { nodes: Array.from(nodesMap.values()), links: linksArr, treeWidth: actualTreeWidth };
+  }, [centerPerson, people, width, computedHeight, ancestorLevels, descendantLevels, actualAncestorLevels, topPadding, levelGap, nodeHeight, nodeWidth]);
 
   // draw a curved link
   const renderLink = (link, i) => {
     const { from, to } = link;
     const midY = (from.y + to.y) / 2;
     const path = `M ${from.x} ${from.y} C ${from.x} ${midY} ${to.x} ${midY} ${to.x} ${to.y}`;
-    return <path key={i} d={path} stroke="#999" fill="none" strokeWidth={1.2} />;
+    return <path key={i} d={path} stroke="#ffb366" fill="none" strokeWidth={1} />;
   };
 
   // (computedHeight already calculated above from ancestor/desc counts)
@@ -194,8 +231,8 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
   };
 
   return (
-    <div ref={treeContainerRef} style={{ width, minHeight: computedHeight, border: '1px solid #eee', background: '#fafafa' }}>
-      <svg width={width} height={computedHeight} style={{ display: 'block' }}>
+    <div ref={treeContainerRef} style={{ width: '100%', minHeight: computedHeight }}>
+      <svg width={treeWidth} height={computedHeight} style={{ display: 'block', minWidth: '100%' }}>
         <defs>
           <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
             <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#000" floodOpacity="0.08"/>
