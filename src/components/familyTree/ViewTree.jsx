@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PersonListSidebar from '../person/personlistsidebar.jsx';
 import CenteredFamilyTree from './CenteredFamilyTree.jsx';
 import ErrorBoundary from '../common/ErrorBoundary.jsx';
@@ -7,6 +8,17 @@ import { usePersonsData } from '../../hooks/usePersonsData.js';
 const ViewTree = () => {
 	// Use the custom hook for persons data management
 	const { persons, loading, error, treeMetadata, refreshData } = usePersonsData();
+	const navigate = useNavigate();
+	
+	// Handler for view person icon in tree
+	const handleViewPerson = (person) => {
+		navigate('/persons');
+	};
+
+	// Handler for person selection in tree
+	const handleTreePersonSelect = (person) => {
+		setSelectedPersonId(person.personId);
+	};
 	
 	// Initialize selected person from localStorage or null
 	const [selectedPersonId, setSelectedPersonId] = useState(() => {
@@ -73,18 +85,18 @@ const ViewTree = () => {
 		<div style={{ display: 'flex', height: '100%' }}>
 			<PersonListSidebar persons={persons} onSelect={setSelectedPersonId} selectedId={selectedPersonId} />
 			<div style={{ flex: 1, padding: '1rem' }}>
-				<h2 style={{ marginTop: 0 }}>
-					{treeMetadata?.treeName || 'Family Tree'}
-				</h2>
-				{/* <div style={{ marginBottom: 8, fontSize: 13, color: '#444' }}>
-					<strong>Persons:</strong> {persons.length} loaded
-					{treeMetadata && (
-						<span style={{ marginLeft: 12, color: '#777' }}>
-							Tree: {treeMetadata.treeId}
-						</span>
+				<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+					<h2 style={{ margin: 0 }}>
+						{treeMetadata?.treeName || 'Family Tree'}
+					</h2>
+					{selectedPerson && (
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+							<span style={{ fontSize: '0.9rem', color: '#666' }}>
+								Selected: {selectedPerson.firstName} {selectedPerson.lastName}
+							</span>
+						</div>
 					)}
-					{persons.length > 0 && <span style={{ marginLeft: 12, color: '#777' }}>Selected: {selectedPersonId || 'none'}</span>}
-				</div> */}
+				</div>
 				{selectedPerson ? (
 					<ErrorBoundary>
 						{/* debug: show selected person JSON for local inspection */}
@@ -94,7 +106,7 @@ const ViewTree = () => {
 								<pre style={{ maxHeight: 200, overflow: 'auto' }}>{JSON.stringify(selectedPerson, null, 2)}</pre>
 							</details>
 						</div> */}
-						<CenteredFamilyTree person={selectedPerson} people={persons} />
+						<CenteredFamilyTree person={selectedPerson} people={persons} onSelect={handleTreePersonSelect} onViewPerson={handleViewPerson} />
 					</ErrorBoundary>
 				) : (
 					<div style={{ color: '#666', padding: '1rem' }}>Select a person from the list to view their family tree.</div>

@@ -8,9 +8,9 @@ import { getAncestors, getDescendants } from "../../utils/familyUtils";
   - Ancestors appear above (levels: parents, grandparents, ...)
   - Descendants appear below (children, grandchildren, ...)
   - No wrapper nodes labeled "Ancestors" or "Descendants"
-  - Props: { person, people, width=1000, height=800, onSelect }
+  - Props: { person, people, width=1000, height=800, onSelect, onViewPerson }
 */
-function CenteredFamilyTree({ person, people, width = 1000, height = null, onSelect = () => {} }) {
+function CenteredFamilyTree({ person, people, width = 1000, height = null, onSelect = () => {}, onViewPerson = () => {} }) {
   if (!person) return <div style={{ padding: 20 }}>Select a person to view the family tree</div>;
 
   // local center state so clicks can re-center without waiting for parent
@@ -226,6 +226,19 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
           {displayName}
         </text>
         <text x={10} y={36} fontSize={11} fill={textColor} fontStyle={fontStyle}>{p.dob || ''}{p.dod ? ` — ${p.dod}` : ''}</text>
+        {isCenter && (
+          <g 
+            transform={`translate(${nodeWidth - 25}, 5)`} 
+            style={{ cursor: 'pointer' }} 
+            onClick={(e) => { e.stopPropagation(); onViewPerson(p); }}
+          >
+            <circle cx={10} cy={10} r={10} fill="rgba(25, 118, 210, 0.1)" stroke="#1976d2" strokeWidth={1} />
+            <svg x={4} y={4} width={12} height={12} viewBox="0 0 24 24" fill="#1976d2">
+              <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+            </svg>
+            <title>View Details</title>
+          </g>
+        )}
       </g>
     );
   };
