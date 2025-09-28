@@ -1,5 +1,5 @@
 // src/components/familyTree/CenteredFamilyTree.jsx
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { getAncestors, getDescendants } from "../../utils/familyUtils";
 
 /*
@@ -15,9 +15,31 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
 
   // local center state so clicks can re-center without waiting for parent
   const [centerPerson, setCenterPerson] = useState(person);
+  const treeContainerRef = useRef(null);
+  
   useEffect(() => {
     setCenterPerson(person);
   }, [person]);
+
+  // Scroll to center person when they change (from sidebar selection)
+  useEffect(() => {
+    if (centerPerson && treeContainerRef.current) {
+      // Calculate where the center person is positioned
+      const actualAncestorLevels = buildAncestorLevels(centerPerson, 6).length;
+      const topPadding = 10;
+      const levelGap = 140;
+      const nodeHeight = 48;
+      const centerY = topPadding + (actualAncestorLevels * levelGap) + (nodeHeight / 2);
+      
+      // Scroll to show the center person with some offset from top
+      const scrollOffset = Math.max(0, centerY - 200); // Show person 200px from top of viewport
+      
+      window.scrollTo({
+        top: scrollOffset,
+        behavior: 'smooth'
+      });
+    }
+  }, [centerPerson]);
 
   const getPersonById = id => people.find(p => p.personId === id) || null;
 
@@ -71,19 +93,27 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
   const maxAnc = 6; // show up to 6 ancestor levels
   const maxDesc = 6; // show up to 6 descendant levels
   const levelGap = 140; // increase vertical spacing so tall trees are visible
+  const nodeWidth = 140;
+  const nodeHeight = 48;
+  const MAX_NAME_LENGTH = 21; // Maximum characters before truncation
+  const ELLIPSIS_START_POS = 17; // Position to start ellipsis when name exceeds max length
   const ancestorLevels = buildAncestorLevels(centerPerson, maxAnc);
   const descendantLevels = buildDescendantLevels(centerPerson.personId, maxDesc);
 
-  // compute dynamic height based on reserved max levels (if `height` prop not provided)
-  const base = 400;
-  // reserve space for maxAnc above and maxDesc below so up to 6 generations are visible
-  const computedHeight = height || Math.max(base + (maxAnc * levelGap) + (maxDesc * levelGap), 900);
+  // compute dynamic height based on actual levels used (not reserved max)
+  const topPadding = 10;
+  const actualAncestorLevels = ancestorLevels.length;
+  const actualDescendantLevels = descendantLevels.length;
+  
+  // height = top padding + ancestor levels + center person + descendant levels + bottom padding
+  const computedHeight = height || (topPadding + (actualAncestorLevels * levelGap) + nodeHeight + (actualDescendantLevels * levelGap) + topPadding);
 
   const { nodes, links } = useMemo(() => {
     if (!centerPerson) return { nodes: [], links: [] };
 
     const centerX = width / 2;
-    const centerY = computedHeight / 2;
+    // Position center person based on actual ancestor levels, not in middle of computed height
+    const centerY = topPadding + (actualAncestorLevels * levelGap) + (nodeHeight / 2);
 
     const nodesMap = new Map();
     nodesMap.set(centerPerson.personId, { person: centerPerson, x: centerX, y: centerY });
@@ -128,7 +158,7 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
     });
 
     return { nodes: Array.from(nodesMap.values()), links: linksArr };
-  }, [centerPerson, people, width, computedHeight, ancestorLevels, descendantLevels]);
+  }, [centerPerson, people, width, computedHeight, ancestorLevels, descendantLevels, actualAncestorLevels, topPadding, levelGap, nodeHeight]);
 
   // draw a curved link
   const renderLink = (link, i) => {
@@ -138,27 +168,33 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
     return <path key={i} d={path} stroke="#999" fill="none" strokeWidth={1.2} />;
   };
 
-  const nodeWidth = 140;
-  const nodeHeight = 48;
-
   // (computedHeight already calculated above from ancestor/desc counts)
 
   const renderNode = (node) => {
     const { person: p, x, y } = node;
     const isCenter = centerPerson && p.personId === centerPerson.personId;
     const fillColor = (p.gender || '').toLowerCase() === 'male' ? '#e6f2ff' : ( (p.gender || '').toLowerCase() === 'female' ? '#ffe6f0' : '#fff' );
-    const textColor = p.dod ? 'red' : '#000';
+    const textColor = p.dod ? '#757575' : '#000'; // Gray for deceased instead of red
+    const fontStyle = p.dod ? 'italic' : 'normal'; // Italic for deceased
+    
+    // Truncate name if longer than MAX_NAME_LENGTH characters
+    const fullName = `${p.firstName} ${p.lastName}`;
+    const displayName = fullName.length > MAX_NAME_LENGTH ? `${fullName.substring(0, ELLIPSIS_START_POS)}..` : fullName;
+    
     return (
       <g key={p.personId} transform={`translate(${x - nodeWidth/2}, ${y - nodeHeight/2})`} style={{ cursor: 'pointer' }} onClick={() => { setCenterPerson(p); if (onSelect) onSelect(p); }}>
-        <rect width={nodeWidth} height={nodeHeight} rx={6} fill={fillColor} stroke={isCenter ? '#f59e0b' : '#3b82f6'} strokeWidth={isCenter ? 2 : 1} />
-        <text x={10} y={18} fontSize={12} fontWeight={600} fill={textColor}>{p.firstName} {p.lastName}</text>
-        <text x={10} y={36} fontSize={11} fill={textColor}>{p.dob || ''}{p.dod ? ` — ${p.dod}` : ''}</text>
+        <rect width={nodeWidth} height={nodeHeight} rx={6} fill={fillColor} stroke={isCenter ? '#1976d2' : '#eee'} strokeWidth={isCenter ? 3 : 1} />
+        <text x={10} y={18} fontSize={12} fontWeight={600} fill={textColor} fontStyle={fontStyle}>
+          <title>{fullName}</title>
+          {displayName}
+        </text>
+        <text x={10} y={36} fontSize={11} fill={textColor} fontStyle={fontStyle}>{p.dob || ''}{p.dod ? ` — ${p.dod}` : ''}</text>
       </g>
     );
   };
 
   return (
-    <div style={{ width, height: computedHeight, overflow: 'auto', border: '1px solid #eee', background: '#fafafa' }}>
+    <div ref={treeContainerRef} style={{ width, minHeight: computedHeight, border: '1px solid #eee', background: '#fafafa' }}>
       <svg width={width} height={computedHeight} style={{ display: 'block' }}>
         <defs>
           <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">

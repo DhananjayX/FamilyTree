@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import Tree from "react-d3-tree";
 import { getAncestors, getDescendants } from "../../utils/familyUtils";
 
-const FamilyTree = ({ person, people }) => {
+const FamilyTree1 = ({ person, people }) => {
   if (!person) return <div>Select a person to view tree</div>;
 
   // Build descendants recursively
@@ -79,4 +79,4 @@ const FamilyTree = ({ person, people }) => {
   );
 };
 
-export default FamilyTree;
+export default FamilyTree1;
