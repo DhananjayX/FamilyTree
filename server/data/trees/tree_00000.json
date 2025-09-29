@@ -3,7 +3,7 @@
   "treeName": "Kulkarni's",
   "creatorEmailId": "admin@familytree.com",
   "createDate": "2024-01-01T00:00:00.000Z",
-  "modifyDate": "2025-09-29T10:59:39.974Z",
+  "modifyDate": "2025-09-29T11:38:02.319Z",
   "treeData": [
     {
       "personId": "p1",
@@ -337,7 +337,13 @@
       "address": "Hbad",
       "notes": "",
       "personId": "p1757967089481",
-      "spouses": [],
+      "spouses": [
+        {
+          "spouseId": "p1759145417185",
+          "marriageDate": "2018-05-05",
+          "divorceDate": ""
+        }
+      ],
       "motherId": "p1757952082304",
       "fatherId": "p1757952216110"
     },
@@ -351,7 +357,8 @@
       "notes": "",
       "personId": "p1757967118680",
       "spouses": [],
-      "fatherId": "p1757967089481"
+      "fatherId": "p1757967089481",
+      "motherId": "p1759145417185"
     },
     {
       "firstName": "Bhagvantrao",
@@ -637,6 +644,25 @@
       "notes": "",
       "personId": "p1759087805074",
       "spouses": []
+    },
+    {
+      "firstName": "Tanaya",
+      "lastName": "Kulkarni",
+      "gender": "female",
+      "motherId": "",
+      "fatherId": "",
+      "dob": "1989-05-19",
+      "dod": "",
+      "address": "Hydrabad",
+      "notes": "",
+      "personId": "p1759145417185",
+      "spouses": [
+        {
+          "spouseId": "p1757967089481",
+          "marriageDate": "2018-05-05",
+          "divorceDate": ""
+        }
+      ]
     }
   ]
 }

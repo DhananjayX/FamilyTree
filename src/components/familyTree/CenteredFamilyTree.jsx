@@ -18,8 +18,24 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
   const [centerPerson, setCenterPerson] = useState(person);
   const treeContainerRef = useRef(null);
   
-  // Tree view type state
-  const [treeViewType, setTreeViewType] = useState('normal'); // 'normal' or 'siblings'
+  // Tree view type state - persist in localStorage
+  const [treeViewType, setTreeViewType] = useState(() => {
+    try {
+      return localStorage.getItem('familyTree_viewType') || 'normal';
+    } catch (error) {
+      console.warn('Failed to read viewType from localStorage:', error);
+      return 'normal';
+    }
+  }); // 'normal' or 'siblings'
+  
+  // Save tree view type to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('familyTree_viewType', treeViewType);
+    } catch (error) {
+      console.warn('Failed to save viewType to localStorage:', error);
+    }
+  }, [treeViewType]);
   
   useEffect(() => {
     setCenterPerson(person);

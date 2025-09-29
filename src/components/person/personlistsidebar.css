@@ -97,6 +97,7 @@
   flex: 1;
   overflow-y: auto;
   min-height: 0; /* Allow flex to shrink */
+  margin-bottom: 8px; /* Space for pagination */
 }
 
 .person-list {
@@ -187,9 +188,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 4px;
-  margin-top: 8px;
+  margin-top: auto; /* Push to bottom */
   border-top: 1px solid #e0e0e0;
   background: #fafbfc;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .pagination-btn {

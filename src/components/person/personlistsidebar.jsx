@@ -41,8 +41,7 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('name'); // 'name' or 'age'
   const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
-  
-  const PAGE_SIZE = 12;
+  const itemsPerPage = 12;
 
   const filteredPersons = persons.filter(person => {
     // Show all when search is empty
@@ -69,9 +68,9 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
   });
 
   // Pagination calculations
-  const totalPages = Math.ceil(sortedPersons.length / PAGE_SIZE);
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
+  const totalPages = Math.ceil(sortedPersons.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
   const paginatedPersons = sortedPersons.slice(startIndex, endIndex);
 
   // Reset to page 1 when search changes
