@@ -90,48 +90,53 @@
 /* Gender-specific selected person backgrounds */
 .person-rect.selected.fill-male-mainline,
 .person-rect.selected.fill-male-sibling,
+.person-rect.selected.fill-male-spouse,
 .person-rect.selected.fill-male-deceased-mainline,
-.person-rect.selected.fill-male-deceased-sibling {
+.person-rect.selected.fill-male-deceased-sibling,
+.person-rect.selected.fill-male-deceased-spouse {
   fill: #bbdefb !important; /* Strong blue background for selected males */
 }
 
 .person-rect.selected.fill-female-mainline,
 .person-rect.selected.fill-female-sibling,
+.person-rect.selected.fill-female-spouse,
 .person-rect.selected.fill-female-deceased-mainline,
-.person-rect.selected.fill-female-deceased-sibling {
+.person-rect.selected.fill-female-deceased-sibling,
+.person-rect.selected.fill-female-deceased-spouse {
   fill: #f8bbd9 !important; /* Strong pink background for selected females */
 }
 
 .person-rect.selected.fill-unknown-mainline,
 .person-rect.selected.fill-unknown-sibling,
+.person-rect.selected.fill-unknown-spouse,
 .person-rect.selected.fill-unknown-deceased-mainline,
 .person-rect.selected.fill-unknown-deceased-sibling,
-.person-rect.selected.fill-spouse {
-  fill: #e3f2fd !important; /* Light blue background for selected unknown gender/spouse */
+.person-rect.selected.fill-unknown-deceased-spouse {
+  fill: #e3f2fd !important; /* Light blue background for selected unknown gender */
 }
 
 /* Spouse rectangles */
 .person-rect.spouse:not(.selected) {
-  stroke: #ff9500;
+  stroke: #1976d2;
   stroke-width: 1;
 }
 
 /* Deceased rectangles */
 .person-rect.deceased:not(.selected) {
-  stroke: #000;
+  stroke: #1976d2;
   stroke-width: 1;
 }
 
 /* Sibling rectangles */
 .person-rect.sibling:not(.selected) {
-  stroke: #000;
+  stroke: #1976d2;
   stroke-width: 0.5;
   stroke-dasharray: 2,2;
 }
 
 /* Mainline rectangles */
 .person-rect.mainline:not(.selected) {
-  stroke: #ff9500;
+  stroke: #1976d2;
   stroke-width: 1;
 }
 
@@ -211,7 +216,7 @@
 }
 
 .family-link.parent-child {
-  stroke: #ffb366;
+  stroke: #1976d2;
   stroke-width: 1;
 }
 
@@ -225,20 +230,23 @@
 /* Male colors */
 .fill-male-mainline { fill: #e6f2ff; }
 .fill-male-sibling { fill: #f7fbff; }
+.fill-male-spouse { fill: #e6f2ff; }
 .fill-male-deceased-mainline { fill: #f0f7ff; }
 .fill-male-deceased-sibling { fill: #f9fcff; }
+.fill-male-deceased-spouse { fill: #f0f7ff; }
 
 /* Female colors */
 .fill-female-mainline { fill: #ffe6f0; }
 .fill-female-sibling { fill: #fffafc; }
+.fill-female-spouse { fill: #ffe6f0; }
 .fill-female-deceased-mainline { fill: #fff0f5; }
 .fill-female-deceased-sibling { fill: #fffbfd; }
+.fill-female-deceased-spouse { fill: #fff0f5; }
 
 /* Unknown gender colors */
 .fill-unknown-mainline { fill: #fff; }
 .fill-unknown-sibling { fill: #fafafa; }
+.fill-unknown-spouse { fill: #f5f5f5; }
 .fill-unknown-deceased-mainline { fill: #f8f8f8; }
 .fill-unknown-deceased-sibling { fill: #fcfcfc; }
-
-/* Spouse colors */
-.fill-spouse { fill: #fff2e6; }
+.fill-unknown-deceased-spouse { fill: #f0f0f0; }

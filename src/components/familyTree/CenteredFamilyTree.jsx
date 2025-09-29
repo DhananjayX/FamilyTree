@@ -267,7 +267,19 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
         // Calculate total width needed for all groups
         let totalRequiredWidth = 0;
         groups.forEach(group => {
-          const groupWidth = group.length * nodeWidth + (group.length - 1) * 10; // 10px between members
+          let groupWidth = 0;
+          group.forEach((p, j) => {
+            groupWidth += nodeWidth;
+            if (j < group.length - 1) {
+              const nextPerson = group[j + 1];
+              // No gap between spouses, 10px gap between others
+              if (p.isSpouse || nextPerson.isSpouse) {
+                groupWidth += 0; // Touching blocks for spouses
+              } else {
+                groupWidth += 10; // 10px gap for siblings
+              }
+            }
+          });
           totalRequiredWidth += groupWidth;
         });
         
@@ -303,14 +315,41 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
       // Single center person (normal mode)
       nodesMap.set(centerPerson.personId, { person: centerLevel[0], x: centerX, y: centerY });
     } else {
-      // Center person with siblings (siblings mode) - group them closer together
-      const siblingMargin = 10; // Smaller margin between siblings
-      const totalGroupWidth = n * nodeWidth + (n - 1) * siblingMargin;
-      const groupStartX = centerX - (totalGroupWidth / 2);
+      // Center person with siblings/spouses (siblings mode) - position with appropriate spacing
+      let currentX = 0;
+      let totalWidth = 0;
+      
+      // Calculate total width with appropriate spacing
+      centerLevel.forEach((p, j) => {
+        totalWidth += nodeWidth;
+        if (j < centerLevel.length - 1) {
+          const nextPerson = centerLevel[j + 1];
+          // No gap between spouses, 10px gap between others
+          if (p.isSpouse || nextPerson.isSpouse) {
+            totalWidth += 0; // Touching blocks for spouses
+          } else {
+            totalWidth += 10; // 10px gap for siblings
+          }
+        }
+      });
+      
+      const groupStartX = centerX - (totalWidth / 2);
+      currentX = groupStartX;
       
       centerLevel.forEach((p, j) => {
-        const x = groupStartX + (j * (nodeWidth + siblingMargin)) + (nodeWidth / 2);
+        const x = currentX + (nodeWidth / 2);
         nodesMap.set(p.personId, { person: p, x, y: centerY });
+        
+        currentX += nodeWidth;
+        if (j < centerLevel.length - 1) {
+          const nextPerson = centerLevel[j + 1];
+          // No gap between spouses, 10px gap between others
+          if (p.isSpouse || nextPerson.isSpouse) {
+            currentX += 0; // Touching blocks for spouses
+          } else {
+            currentX += 10; // 10px gap for siblings
+          }
+        }
       });
     }
 
@@ -336,7 +375,14 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
         let totalRequiredWidth = 0;
         const groupWidths = [];
         groups.forEach(group => {
-          const groupWidth = group.length * nodeWidth + (group.length - 1) * 10; // 10px between siblings
+          let groupWidth = 0;
+          group.forEach((p, j) => {
+            groupWidth += nodeWidth;
+            if (j < group.length - 1) {
+              // Ancestors are siblings, so keep 10px gap
+              groupWidth += 10; // 10px gap for siblings
+            }
+          });
           groupWidths.push(groupWidth);
           totalRequiredWidth += groupWidth;
         });
@@ -352,11 +398,17 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
         
         let groupIndex = 0;
         groups.forEach(group => {
-          const groupStartX = currentX;
+          let groupCurrentX = currentX;
           
           group.forEach((p, j) => {
-            const x = groupStartX + (j * (nodeWidth + 10)) + (nodeWidth / 2);
+            const x = groupCurrentX + (nodeWidth / 2);
             nodesMap.set(p.personId, { person: p, x, y });
+            
+            groupCurrentX += nodeWidth;
+            if (j < group.length - 1) {
+              // Ancestors are siblings, so keep 10px gap
+              groupCurrentX += 10; // 10px gap for siblings
+            }
           });
           
           currentX += groupWidths[groupIndex] + 60; // Move to next group position
@@ -401,7 +453,19 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
         let totalRequiredWidth = 0;
         const groupWidths = [];
         groups.forEach(group => {
-          const groupWidth = group.length * nodeWidth + (group.length - 1) * 10; // 10px between spouses
+          let groupWidth = 0;
+          group.forEach((p, j) => {
+            groupWidth += nodeWidth;
+            if (j < group.length - 1) {
+              const nextPerson = group[j + 1];
+              // No gap between spouses, 10px gap between others
+              if (p.isSpouse || nextPerson.isSpouse) {
+                groupWidth += 0; // Touching blocks for spouses
+              } else {
+                groupWidth += 10; // 10px gap for siblings
+              }
+            }
+          });
           groupWidths.push(groupWidth);
           totalRequiredWidth += groupWidth;
         });
@@ -417,11 +481,22 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
         
         let groupIndex = 0;
         groups.forEach(group => {
-          const groupStartX = currentX;
+          let groupCurrentX = currentX;
           
           group.forEach((p, j) => {
-            const x = groupStartX + (j * (nodeWidth + 10)) + (nodeWidth / 2);
+            const x = groupCurrentX + (nodeWidth / 2);
             nodesMap.set(p.personId, { person: p, x, y });
+            
+            groupCurrentX += nodeWidth;
+            if (j < group.length - 1) {
+              const nextPerson = group[j + 1];
+              // No gap between spouses, 10px gap between others
+              if (p.isSpouse || nextPerson.isSpouse) {
+                groupCurrentX += 0; // Touching blocks for spouses
+              } else {
+                groupCurrentX += 10; // 10px gap for siblings
+              }
+            }
           });
           
           currentX += groupWidths[groupIndex] + 60; // Move to next group position
@@ -500,11 +575,16 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
               const fromNode = group[i];
               const toNode = group[i + 1];
               
-              linksArr.push({ 
-                from: { x: fromNode.x, y: fromNode.y }, 
-                to: { x: toNode.x, y: toNode.y }, 
-                isSiblingConnection: true 
-              });
+              // Don't draw connection lines between spouses (they should be touching blocks)
+              const isSpouseConnection = fromNode.person.isSpouse || toNode.person.isSpouse;
+              
+              if (!isSpouseConnection) {
+                linksArr.push({ 
+                  from: { x: fromNode.x, y: fromNode.y }, 
+                  to: { x: toNode.x, y: toNode.y }, 
+                  isSiblingConnection: true 
+                });
+              }
             }
           }
         });
@@ -532,15 +612,13 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
 
   // Helper function to get CSS classes for person background colors
   const getPersonFillClass = (person, isSibling, isSpouse, isDeceased) => {
-    if (isSpouse) return 'fill-spouse';
-    
     const gender = (person.gender || '').toLowerCase();
     const genderPrefix = gender === 'male' ? 'male' : gender === 'female' ? 'female' : 'unknown';
     
     if (isDeceased) {
-      return `fill-${genderPrefix}-deceased-${isSibling ? 'sibling' : 'mainline'}`;
+      return `fill-${genderPrefix}-deceased-${isSibling ? 'sibling' : isSpouse ? 'spouse' : 'mainline'}`;
     } else {
-      return `fill-${genderPrefix}-${isSibling ? 'sibling' : 'mainline'}`;
+      return `fill-${genderPrefix}-${isSibling ? 'sibling' : isSpouse ? 'spouse' : 'mainline'}`;
     }
   };
 
