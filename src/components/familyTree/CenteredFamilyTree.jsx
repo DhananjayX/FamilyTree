@@ -1,6 +1,7 @@
 // src/components/familyTree/CenteredFamilyTree.jsx
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { getAncestors, getDescendants } from "../../utils/familyUtils";
+import './CenteredFamilyTree.css';
 
 /*
   Manual SVG-centered family tree
@@ -11,7 +12,7 @@ import { getAncestors, getDescendants } from "../../utils/familyUtils";
   - Props: { person, people, width=1000, height=800, onSelect, onViewPerson }
 */
 function CenteredFamilyTree({ person, people, width = 1000, height = null, onSelect = () => {}, onViewPerson = () => {} }) {
-  if (!person) return <div style={{ padding: 20 }}>Select a person to view the family tree</div>;
+  if (!person) return <div className="no-person-message">Select a person to view the family tree</div>;
 
   // local center state so clicks can re-center without waiting for parent
   const [centerPerson, setCenterPerson] = useState(person);
@@ -54,6 +55,29 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
       ((person.motherId && p.motherId === person.motherId) || 
        (person.fatherId && p.fatherId === person.fatherId))
     );
+  };
+
+  const getSpousesForPerson = (person) => {
+    // Find people who have children with this person (are co-parents)
+    const spouses = [];
+    
+    // Find all children of this person
+    const children = people.filter(p => 
+      p.motherId === person.personId || p.fatherId === person.personId
+    );
+    
+    // For each child, find the other parent (spouse)
+    children.forEach(child => {
+      const otherParentId = child.motherId === person.personId ? child.fatherId : child.motherId;
+      if (otherParentId && !spouses.some(s => s.personId === otherParentId)) {
+        const spouse = getPersonById(otherParentId);
+        if (spouse) {
+          spouses.push(spouse);
+        }
+      }
+    });
+    
+    return spouses;
   };
 
   const buildAncestorLevels = (root, maxLevels) => {
@@ -124,17 +148,47 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
 
     for (let i = 0; i < maxLevels; i++) {
       const next = [];
+      const levelPeople = [];
+      
       currentIds.forEach(id => {
         people.forEach(p => {
           if (!visited.has(p.personId) && (p.motherId === id || p.fatherId === id)) {
-            next.push(p);
+            levelPeople.push(p);
             visited.add(p.personId);
           }
         });
       });
+
+      // If in siblings mode, add spouses for descendants
+      if (treeViewType === 'siblings') {
+        const levelWithSpouses = [];
+        levelPeople.forEach(person => {
+          const spouses = getSpousesForPerson(person).filter(s => !visited.has(s.personId));
+          spouses.forEach(spouse => {
+            visited.add(spouse.personId);
+          });
+          
+          // Position spouses based on the main person's gender (opposite side of siblings)
+          const mainPersonGender = (person.gender || '').toLowerCase();
+          
+          if (mainPersonGender === 'female') {
+            // Female person: show main person first, then spouses on right
+            levelWithSpouses.push({ ...person, isSpouse: false, mainPerson: person.personId });
+            levelWithSpouses.push(...spouses.map(s => ({ ...s, isSpouse: true, mainPerson: person.personId, spousePosition: 'right' })));
+          } else {
+            // Male person (or unknown gender): show spouses on left, then main person
+            levelWithSpouses.push(...spouses.map(s => ({ ...s, isSpouse: true, mainPerson: person.personId, spousePosition: 'left' })));
+            levelWithSpouses.push({ ...person, isSpouse: false, mainPerson: person.personId });
+          }
+        });
+        next.push(...levelWithSpouses);
+      } else {
+        next.push(...levelPeople.map(p => ({ ...p, isSpouse: false })));
+      }
+      
       if (next.length === 0) break;
       levels.push(next);
-      currentIds = next.map(p => p.personId);
+      currentIds = levelPeople.map(p => p.personId); // Use original level people for next iteration
     }
     return levels;
   };
@@ -150,7 +204,7 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
   
   // Recalculate levels when tree view type changes
   const ancestorLevels = useMemo(() => buildAncestorLevels(centerPerson, maxAnc), [centerPerson, treeViewType, people]);
-  const descendantLevels = buildDescendantLevels(centerPerson.personId, maxDesc);
+  const descendantLevels = useMemo(() => buildDescendantLevels(centerPerson.personId, maxDesc), [centerPerson, treeViewType, people, maxDesc]);
 
   // compute dynamic height based on actual levels used (not reserved max)
   const topPadding = 10;
@@ -163,21 +217,24 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
   const { nodes, links, treeWidth } = useMemo(() => {
     if (!centerPerson) return { nodes: [], links: [], treeWidth: width };
 
-    // Create center level with siblings if in siblings mode
+    // Create center level with siblings and spouses if in siblings mode
     let centerLevel = [centerPerson];
     if (treeViewType === 'siblings') {
       const centerSiblings = getSiblingsForPerson(centerPerson);
+      const centerSpouses = getSpousesForPerson(centerPerson);
       const mainPersonGender = (centerPerson.gender || '').toLowerCase();
       
       if (mainPersonGender === 'female') {
-        // Female person: show all siblings on left side, then main person
+        // Female person: show all siblings on left side, then main person, then spouses on right
         centerLevel = [
           ...centerSiblings.map(s => ({ ...s, isSibling: true, mainPerson: centerPerson.personId, siblingPosition: 'left' })),
-          { ...centerPerson, isSibling: false, mainPerson: centerPerson.personId }
+          { ...centerPerson, isSibling: false, mainPerson: centerPerson.personId },
+          ...centerSpouses.map(s => ({ ...s, isSpouse: true, mainPerson: centerPerson.personId, spousePosition: 'right' }))
         ];
       } else {
-        // Male person (or unknown gender): show main person first, then all siblings on right side
+        // Male person (or unknown gender): show spouses on left, then main person, then siblings on right
         centerLevel = [
+          ...centerSpouses.map(s => ({ ...s, isSpouse: true, mainPerson: centerPerson.personId, spousePosition: 'left' })),
           { ...centerPerson, isSibling: false, mainPerson: centerPerson.personId },
           ...centerSiblings.map(s => ({ ...s, isSibling: true, mainPerson: centerPerson.personId, siblingPosition: 'right' }))
         ];
@@ -191,13 +248,46 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
       ...descendantLevels
     ];
     
-    const minMargin = 20;
-    const maxLevelWidth = Math.max(...allLevels.map(levelArray => {
-      const n = levelArray.length;
-      const totalNodeWidth = n * nodeWidth;
-      const totalMarginWidth = (n - 1) * minMargin;
-      return totalNodeWidth + totalMarginWidth + (2 * minMargin); // add padding on sides
-    }));
+    let maxLevelWidth;
+    if (treeViewType === 'siblings') {
+      // Calculate width based on grouped positioning for siblings mode
+      maxLevelWidth = Math.max(...allLevels.map(levelArray => {
+        if (levelArray.length === 0) return 0;
+        
+        // Group by mainPerson to calculate actual grouped width
+        const groups = new Map();
+        levelArray.forEach(p => {
+          const mainPersonId = p.mainPerson || p.personId;
+          if (!groups.has(mainPersonId)) {
+            groups.set(mainPersonId, []);
+          }
+          groups.get(mainPersonId).push(p);
+        });
+        
+        // Calculate total width needed for all groups
+        let totalRequiredWidth = 0;
+        groups.forEach(group => {
+          const groupWidth = group.length * nodeWidth + (group.length - 1) * 10; // 10px between members
+          totalRequiredWidth += groupWidth;
+        });
+        
+        // Add gaps between groups (60px each)
+        const numGaps = groups.size - 1;
+        totalRequiredWidth += numGaps * 60;
+        
+        // Add padding on both sides
+        return totalRequiredWidth + 100; // 50px padding on each side
+      }));
+    } else {
+      // Normal width calculation for regular view
+      const minMargin = 20;
+      maxLevelWidth = Math.max(...allLevels.map(levelArray => {
+        const n = levelArray.length;
+        const totalNodeWidth = n * nodeWidth;
+        const totalMarginWidth = (n - 1) * minMargin;
+        return totalNodeWidth + totalMarginWidth + (2 * minMargin); // add padding on sides
+      }));
+    }
     
     const actualTreeWidth = Math.max(width, maxLevelWidth);
     const centerX = actualTreeWidth / 2;
@@ -255,8 +345,10 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
         const numGaps = groups.size - 1;
         totalRequiredWidth += numGaps * 60;
         
-        // Start from center and work outward
-        let currentX = centerX - (totalRequiredWidth / 2);
+        // Start from center and work outward, but ensure minimum left padding
+        const idealStartX = centerX - (totalRequiredWidth / 2);
+        const minLeftPadding = 50; // Minimum 50px from left edge
+        let currentX = Math.max(idealStartX, minLeftPadding);
         
         let groupIndex = 0;
         groups.forEach(group => {
@@ -291,22 +383,65 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
     descendantLevels.forEach((levelArray, idx) => {
       const level = idx + 1;
       const y = centerY + level * levelGap;
-      const n = levelArray.length;
       
-      // Calculate spacing with minimum margin between nodes
-      const minMargin = 20; // minimum space between nodes
-      const totalNodeWidth = n * nodeWidth;
-      const totalMarginWidth = (n - 1) * minMargin;
-      const requiredWidth = totalNodeWidth + totalMarginWidth;
-      
-      // Use larger of: required width or actual tree width
-      const effectiveWidth = Math.max(requiredWidth, actualTreeWidth);
-      const spacing = effectiveWidth / (n + 1);
-      
-      levelArray.forEach((p, j) => {
-        const x = spacing * (j + 1);
-        nodesMap.set(p.personId, { person: p, x, y });
-      });
+      if (treeViewType === 'siblings') {
+        // Group spouses closer to their main person, similar to sibling logic
+        
+        // Group people by their mainPerson property
+        const groups = new Map();
+        levelArray.forEach(p => {
+          const mainPersonId = p.mainPerson || p.personId;
+          if (!groups.has(mainPersonId)) {
+            groups.set(mainPersonId, []);
+          }
+          groups.get(mainPersonId).push(p);
+        });
+        
+        // Calculate total width needed for all groups
+        let totalRequiredWidth = 0;
+        const groupWidths = [];
+        groups.forEach(group => {
+          const groupWidth = group.length * nodeWidth + (group.length - 1) * 10; // 10px between spouses
+          groupWidths.push(groupWidth);
+          totalRequiredWidth += groupWidth;
+        });
+        
+        // Add gaps between groups (60px each)
+        const numGaps = groups.size - 1;
+        totalRequiredWidth += numGaps * 60;
+        
+        // Start from center and work outward, but ensure minimum left padding
+        const idealStartX = centerX - (totalRequiredWidth / 2);
+        const minLeftPadding = 50; // Minimum 50px from left edge
+        let currentX = Math.max(idealStartX, minLeftPadding);
+        
+        let groupIndex = 0;
+        groups.forEach(group => {
+          const groupStartX = currentX;
+          
+          group.forEach((p, j) => {
+            const x = groupStartX + (j * (nodeWidth + 10)) + (nodeWidth / 2);
+            nodesMap.set(p.personId, { person: p, x, y });
+          });
+          
+          currentX += groupWidths[groupIndex] + 60; // Move to next group position
+          groupIndex++;
+        });
+      } else {
+        // Normal spacing for regular descendant view
+        const n = levelArray.length;
+        const minMargin = 20;
+        const totalNodeWidth = n * nodeWidth;
+        const totalMarginWidth = (n - 1) * minMargin;
+        const requiredWidth = totalNodeWidth + totalMarginWidth;
+        const effectiveWidth = Math.max(requiredWidth, actualTreeWidth);
+        const spacing = effectiveWidth / (n + 1);
+        
+        levelArray.forEach((p, j) => {
+          const x = spacing * (j + 1);
+          nodesMap.set(p.personId, { person: p, x, y });
+        });
+      }
     });
 
     // links: parent -> child when both on map, but exclude siblings
@@ -314,8 +449,8 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
     nodesMap.forEach((node, pid) => {
       const p = node.person;
       
-      // Skip creating parent links for siblings
-      if (p.isSibling) return;
+      // Skip creating parent links for siblings and spouses
+      if (p.isSibling || p.isSpouse) return;
       
       const parentIds = [];
       if (p.motherId) parentIds.push(p.motherId);
@@ -323,7 +458,10 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
       parentIds.forEach(parentId => {
         if (nodesMap.has(parentId)) {
           const parentNode = nodesMap.get(parentId);
-          linksArr.push({ from: { x: parentNode.x, y: parentNode.y }, to: { x: node.x, y: node.y }, parentId, childId: pid });
+          // Only create links to non-spouse parent nodes
+          if (!parentNode.person.isSpouse) {
+            linksArr.push({ from: { x: parentNode.x, y: parentNode.y }, to: { x: node.x, y: node.y }, parentId, childId: pid });
+          }
         }
       });
     });
@@ -383,12 +521,26 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
     if (isSiblingConnection) {
       // Draw straight horizontal line for sibling connections
       const path = `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
-      return <path key={i} d={path} stroke="#bbb" fill="none" strokeWidth={2} strokeDasharray="5,3" />;
+      return <path key={i} d={path} className="family-link sibling" />;
     } else {
       // Draw curved line for parent-child connections
       const midY = (from.y + to.y) / 2;
       const path = `M ${from.x} ${from.y} C ${from.x} ${midY} ${to.x} ${midY} ${to.x} ${to.y}`;
-      return <path key={i} d={path} stroke="#ffb366" fill="none" strokeWidth={1} />;
+      return <path key={i} d={path} className="family-link parent-child" />;
+    }
+  };
+
+  // Helper function to get CSS classes for person background colors
+  const getPersonFillClass = (person, isSibling, isSpouse, isDeceased) => {
+    if (isSpouse) return 'fill-spouse';
+    
+    const gender = (person.gender || '').toLowerCase();
+    const genderPrefix = gender === 'male' ? 'male' : gender === 'female' ? 'female' : 'unknown';
+    
+    if (isDeceased) {
+      return `fill-${genderPrefix}-deceased-${isSibling ? 'sibling' : 'mainline'}`;
+    } else {
+      return `fill-${genderPrefix}-${isSibling ? 'sibling' : 'mainline'}`;
     }
   };
 
@@ -398,47 +550,53 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
     const { person: p, x, y } = node;
     const isCenter = centerPerson && p.personId === centerPerson.personId;
     const isSibling = p.isSibling;
+    const isSpouse = p.isSpouse;
+    const isDeceased = !!p.dod;
     
-    // Different colors for siblings vs main ancestors
-    const fillColor = isSibling 
-      ? '#f5f5f5' // Light gray for siblings
-      : (p.gender || '').toLowerCase() === 'male' ? '#e6f2ff' : ( (p.gender || '').toLowerCase() === 'female' ? '#ffe6f0' : '#fff' );
+    // Get CSS classes for styling
+    const fillClass = getPersonFillClass(p, isSibling, isSpouse, isDeceased);
     
-    const textColor = p.dod ? '#757575' : (isSibling ? '#666' : '#000'); // Slightly muted for siblings
-    const fontStyle = p.dod ? 'italic' : 'normal'; // Italic for deceased
+    // Determine person type for CSS classes
+    let personType = 'mainline';
+    if (isSibling) personType = 'sibling';
+    else if (isSpouse) personType = 'spouse';
+    else if (isDeceased) personType = 'deceased';
     
     // Truncate name if longer than MAX_NAME_LENGTH characters
     const fullName = `${p.firstName} ${p.lastName}`;
     const displayName = fullName.length > MAX_NAME_LENGTH ? `${fullName.substring(0, ELLIPSIS_START_POS)}..` : fullName;
     
     return (
-      <g key={p.personId} transform={`translate(${x - nodeWidth/2}, ${y - nodeHeight/2})`} style={{ cursor: 'pointer' }} onClick={() => { setCenterPerson(p); if (onSelect) onSelect(p); }}>
+      <g key={p.personId} transform={`translate(${x - nodeWidth/2}, ${y - nodeHeight/2})`} className="person-node" onClick={() => { setCenterPerson(p); if (onSelect) onSelect(p); }}>
         <rect 
           width={nodeWidth} 
           height={nodeHeight} 
-          rx={6} 
-          fill={fillColor} 
-          stroke={isCenter ? '#1976d2' : (isSibling ? '#ccc' : '#eee')} 
-          strokeWidth={isCenter ? 3 : (isSibling ? 1 : 1)}
-          strokeDasharray={isSibling ? '3,2' : 'none'}
+          className={`person-rect ${fillClass} ${isSpouse ? 'spouse' : isDeceased ? 'deceased' : 'regular'} ${isCenter ? 'selected' : isSibling ? 'sibling' : isSpouse ? 'normal' : isDeceased ? 'normal' : 'mainline'}`}
         />
-        <text x={10} y={18} fontSize={12} fontWeight={isSibling ? 400 : 600} fill={textColor} fontStyle={fontStyle}>
-          <title>{fullName}{isSibling ? ' (Sibling)' : ''}</title>
+        <text x={10} y={18} className={`person-name ${personType}`}>
+          <title>{fullName}{isSibling ? ' (Sibling)' : isSpouse ? ' (Spouse)' : ''}</title>
           {displayName}
         </text>
-        <text x={10} y={36} fontSize={11} fill={textColor} fontStyle={fontStyle}>{p.dob || ''}{p.dod ? ` — ${p.dod}` : ''}</text>
-        {isSibling && (
-          <text x={nodeWidth - 15} y={15} fontSize={10} fill="#999" fontWeight="bold">
-            S
+        <text x={10} y={36} className={`person-dates ${personType}`}>{p.dob || ''}{p.dod ? ` — ${p.dod}` : ''}</text>
+        {isSpouse && (
+          <text x={nodeWidth - 15} y={15} className="spouse-icon">
+            ♥
           </text>
         )}
+        {isDeceased && (
+          <text x={nodeWidth - 15} y={15} className="deceased-icon">
+            🙏
+          </text>
+        )}
+
         {isCenter && (
           <g 
-            transform={`translate(${nodeWidth - 25}, 5)`} style={{ cursor: 'pointer' }} 
+            transform={`translate(${nodeWidth - 25}, 5)`} 
+            className="view-person-button"
             onClick={(e) => { e.stopPropagation(); onViewPerson(p); }}
           >
-            <circle cx={10} cy={10} r={10} fill="rgba(25, 118, 210, 0.1)" stroke="#1976d2" strokeWidth={1} />
-            <svg x={4} y={4} width={12} height={12} viewBox="0 0 24 24" fill="#1976d2">
+            <circle cx={10} cy={10} r={10} className="view-button-circle" />
+            <svg x={4} y={4} width={12} height={12} viewBox="0 0 24 24" className="view-button-icon">
               <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
             </svg>
             <title>View Details</title>
@@ -449,57 +607,36 @@ function CenteredFamilyTree({ person, people, width = 1000, height = null, onSel
   };
 
   return (
-    <div ref={treeContainerRef} style={{ width: '100%', minHeight: computedHeight }}>
+    <div ref={treeContainerRef} className="centered-family-tree" style={{ minHeight: computedHeight }}>
       {/* Tree View Type Toolbar */}
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '0.5rem', 
-        padding: '0.75rem', 
-        backgroundColor: '#f8f9fa', 
-        borderRadius: '8px', 
-        marginBottom: '1rem',
-        border: '1px solid #e9ecef'
-      }}>
-        <span style={{ fontSize: '0.9rem', fontWeight: '500', color: '#495057' }}>Tree View:</span>
-        <div style={{ display: 'flex', borderRadius: '6px', overflow: 'hidden', border: '1px solid #dee2e6' }}>
+      <div className="tree-view-toolbar">
+        <span className="toolbar-label">Tree View:</span>
+        <div className="toolbar-buttons">
           <button
             onClick={() => setTreeViewType('normal')}
-            style={{
-              padding: '0.375rem 0.75rem',
-              border: 'none',
-              backgroundColor: treeViewType === 'normal' ? '#0d6efd' : '#fff',
-              color: treeViewType === 'normal' ? '#fff' : '#495057',
-              fontSize: '0.875rem',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
+            className={`toolbar-button normal ${treeViewType === 'normal' ? 'active' : 'inactive'}`}
           >
             Basic
           </button>
           <button
             onClick={() => setTreeViewType('siblings')}
-            style={{
-              padding: '0.375rem 0.75rem',
-              border: 'none',
-              borderLeft: '1px solid #dee2e6',
-              backgroundColor: treeViewType === 'siblings' ? '#0d6efd' : '#fff',
-              color: treeViewType === 'siblings' ? '#fff' : '#495057',
-              fontSize: '0.875rem',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
+            className={`toolbar-button siblings ${treeViewType === 'siblings' ? 'active' : 'inactive'}`}
           >
-            With Siblings
+            Advance
           </button>
         </div>
       </div>
       
-      <svg width={treeWidth} height={computedHeight} style={{ display: 'block', minWidth: '100%' }}>
+      <svg width={treeWidth} height={computedHeight} className="family-tree-svg">
         <defs>
           <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
             <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#000" floodOpacity="0.08"/>
           </filter>
+          <linearGradient id="memorialGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 0.8 }} />
+            <stop offset="50%" style={{ stopColor: '#f0f0f0', stopOpacity: 0.4 }} />
+            <stop offset="100%" style={{ stopColor: '#e0e0e0', stopOpacity: 0.6 }} />
+          </linearGradient>
         </defs>
 
         <g>{links.map((l, i) => renderLink(l, i))}</g>
