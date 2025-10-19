@@ -41,7 +41,7 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('name'); // 'name' or 'age'
   const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
 
   const filteredPersons = persons.filter(person => {
     // Show all when search is empty

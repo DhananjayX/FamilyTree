@@ -1,7 +1,7 @@
 /* PersonListSidebar Component Styles */
 
 .person-list-sidebar {
-  width: 240px;
+  width: 100%;
   min-width: 220px;
   float: left;
   border-right: 1px solid #eee;
