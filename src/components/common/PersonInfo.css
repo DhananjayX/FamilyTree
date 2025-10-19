@@ -1,9 +1,9 @@
 /* Simple bordered card for person info */
 .person-info-card{
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid rgba(255,100,255,0.08);
   border-radius: 8px;
   padding: 12px;
-  background: rgba(255,255,255,0.02);
+  background: rgba(255,255,255,0.02);  
   margin-bottom: 8px;
 }
 .person-info-card h2{margin:0 0 8px 0}

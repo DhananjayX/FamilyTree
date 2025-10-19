@@ -18,6 +18,7 @@ export function loadPersonsFromLocal() {
 // Save persons array to backend using new tree structure
 export async function savePersonsToBackend(persons, treeId) {
   try {
+    console.log('Saving persons to backend, count:', persons.length);
     // Use config for API base URL and default tree ID
     const apiBaseUrl = config?.api?.baseUrl || 'http://localhost:3001/api';
     const defaultTreeId = config?.app?.defaultTreeId || 'tree_00000';
@@ -88,6 +89,7 @@ export async function savePersonsToBackend(persons, treeId) {
 
 // Optionally, add a function to auto-save before unload
 export function setupAutoSave(personsGetter) {
+  console.log('Setting up auto-save on beforeunload');
   window.addEventListener('beforeunload', () => {
     savePersonsToLocal(personsGetter());
   });

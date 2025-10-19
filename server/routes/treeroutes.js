@@ -351,4 +351,105 @@ router.put('/tree/:id', async (req, res) => {
   }
 });
 
+// GET /api/trees - Get all available trees with their complete data
+router.get('/trees', async (req, res) => {
+  try {
+    console.log('Getting all trees from path:', TREE_ROOT_PATH);
+    
+    // Check if trees directory exists
+    try {
+      await fs.access(TREE_ROOT_PATH);
+    } catch (accessError) {
+      console.error('Trees directory not found:', TREE_ROOT_PATH);
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Trees directory not found',
+        path: TREE_ROOT_PATH
+      });
+    }
+    
+    // Read all files in the trees directory
+    const files = await fs.readdir(TREE_ROOT_PATH);
+    const treeFiles = files.filter(file => file.endsWith('.json') && file.startsWith('tree_'));
+    
+    console.log('Found tree files:', treeFiles);
+    
+    if (treeFiles.length === 0) {
+      return res.json({ 
+        success: true, 
+        trees: [],
+        count: 0,
+        message: 'No trees found'
+      });
+    }
+    
+    // Read complete tree data from each file
+    const trees = [];
+    
+    for (const fileName of treeFiles) {
+      try {
+        const treeFilePath = path.join(TREE_ROOT_PATH, fileName);
+        const treeData = await fs.readFile(treeFilePath, 'utf8');
+        const treeJson = JSON.parse(treeData);
+        
+        // Use the tree file structure as-is, just add member count for display
+        const treeWithMemberCount = {
+          ...treeJson,
+          memberCount: Array.isArray(treeJson.treeData) ? treeJson.treeData.length : 0,
+          fileName: fileName
+        };
+        
+        trees.push(treeWithMemberCount);
+        console.log(`Loaded tree ${treeJson.treeId}: "${treeJson.treeName}" with ${treeWithMemberCount.memberCount} members`);
+        
+      } catch (fileError) {
+        console.error(`Error reading tree file ${fileName}:`, fileError.message);
+        
+        // Add a minimal entry for corrupted files
+        trees.push({
+          treeId: fileName.replace('.json', ''),
+          treeName: `Corrupted Tree (${fileName})`,
+          creatorEmailId: 'Unknown',
+          createDate: null,
+          modifyDate: null,
+          treeData: [],
+          memberCount: 0,
+          fileName: fileName,
+          error: 'File corrupted or invalid JSON format',
+          errorDetails: fileError.message
+        });
+      }
+    }
+    
+    // Sort trees by modification date (newest first), then by creation date, then by name
+    trees.sort((a, b) => {
+      if (a.modifyDate && b.modifyDate) {
+        return new Date(b.modifyDate) - new Date(a.modifyDate);
+      } else if (a.createDate && b.createDate) {
+        return new Date(b.createDate) - new Date(a.createDate);
+      } else {
+        return a.treeName.localeCompare(b.treeName);
+      }
+    });
+    
+    console.log(`Successfully loaded ${trees.length} trees with complete data`);
+    
+    // Return trees with their original structure
+    res.json({ 
+      success: true, 
+      trees: trees,
+      count: trees.length,
+      totalMembers: trees.reduce((sum, tree) => sum + tree.memberCount, 0)
+    });
+    
+  } catch (error) {
+    console.error('Error loading all trees:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to load trees', 
+      details: error.message 
+    });
+  }
+});
+
 module.exports = router;

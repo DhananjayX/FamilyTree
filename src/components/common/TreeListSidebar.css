@@ -1,0 +1,258 @@
+.tree-list-sidebar {
+  width: 100%;
+  background-color: #fafafa;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.tree-list-header {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--surface-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.tree-list-header h3 {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.refresh-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  padding: 1px 4px;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover {
+  background-color: var(--surface-hover);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.tree-list-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 3px;
+}
+
+.tree-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Non-selected tree item - transparent background */
+.tree-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px;
+  margin-bottom: 1px;
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: transparent; /* Changed from #909191 to transparent */
+  color: var(--text-primary); /* Default text color */
+}
+
+/* Hover state for non-selected items */
+.tree-item:hover {
+  background-color: #f0f8ff; /* Very light blue on hover */
+  border-color: var(--primary-color);
+}
+
+/* Selected tree item - light blue background */
+.tree-item.selected {
+  background-color: #e3f2fd; /* Light blue background for selected */
+  color: #1565c0; /* Darker blue text for selected */
+  border-color: #2196f3; /* Blue border */
+}
+
+/* Selected item hover - slightly darker light blue */
+.tree-item.selected:hover {
+  background-color: #bbdefb; /* Slightly darker light blue on hover when selected */
+}
+
+/* Member count styling for normal items */
+.tree-item .member-count {
+  color: var(--text-secondary);
+}
+
+/* Member count styling for selected items */
+.tree-item.selected .member-count {
+  color: #1976d2; /* Blue text for member count when selected */
+}
+
+/* Error state */
+.tree-item.error {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #fff5f5; /* Light red background for errors */
+  border-color: #fed7d7; /* Light red border */
+}
+
+.tree-item.error:hover {
+  background-color: #fff5f5; /* Keep same background on hover for errors */
+}
+
+.tree-name {
+  font-weight: 500;
+  font-size: 0.75rem;
+  flex: 1;
+  margin-right: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member-count {
+  font-size: 0.7rem;
+  font-weight: normal;
+  flex-shrink: 0;
+}
+
+/* Compact loading and error states */
+.tree-list-loading, 
+.tree-list-error,
+.tree-list-empty {
+  padding: 8px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+}
+
+.tree-list-error {
+  color: var(--error-color);
+}
+
+.retry-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 2px;
+  padding: 2px 6px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  margin-top: 4px;
+}
+
+.retry-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Scrollbar */
+.tree-list-container::-webkit-scrollbar {
+  width: 2px;
+}
+
+.tree-list-container::-webkit-scrollbar-track {
+  background: var(--background-color);
+}
+
+.tree-list-container::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 1px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.upload-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  padding: 1px 4px;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+  background-color: #e8f5e8;
+  border-color: #4caf50;
+  color: #4caf50;
+}
+
+.upload-btn-large {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-top: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.upload-btn-large:hover {
+  background-color: var(--primary-dark);
+}
+
+.tree-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px;
+  margin-bottom: 1px;
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: transparent;
+  color: var(--text-primary);
+}
+
+.tree-item-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  cursor: pointer;
+}
+
+.tree-item.local {
+  border-left: 3px solid #4caf50; /* Green left border for local trees */
+}
+
+.local-badge {
+  margin-left: 4px;
+  font-size: 0.6rem;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  padding: 2px;
+  margin-left: 4px;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.delete-btn:hover {
+  color: #f44336;
+}
+
+/* Update existing tree-item hover to not affect delete button */
+.tree-item:hover .tree-item-content {
+  /* Move hover styles here if needed */
+}

@@ -8,7 +8,7 @@
   height: 100%;
   padding: 1rem 0.5rem;
   box-sizing: border-box;
-  background: #fafbfc;
+  background: #fafbfc; /*fafbfc; */
   display: flex;
   flex-direction: column;
 }

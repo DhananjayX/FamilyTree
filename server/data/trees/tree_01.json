@@ -1,0 +1,65 @@
+{
+  "treeId": "tree_00000",
+  "treeName": "Kete",
+  "creatorEmailId": "admin@familytree.com",
+  "createDate": "2024-01-01T00:00:00.000Z",
+  "modifyDate": "2025-10-19T02:00:41.863Z",
+  "treeData": [
+    {
+      "firstName": "Dhananjay",
+      "lastName": "Kulkarni",
+      "gender": "male",
+      "dob": "1984-05-30",
+      "dod": "",
+      "address": "1207 Cypress CT",
+      "notes": "",
+      "personId": "p17579514472881",
+      "spouses": [
+        {
+          "spouseId": "p17579522486381",
+          "marriageDate": "2011-03-12",
+          "divorceDate": ""
+        }
+      ],
+      "motherId": "p17579542272281",
+      "fatherId": "p1"
+    },
+	{
+      "firstName": "Chaya",
+      "lastName": "Kete",
+      "gender": "female",
+      "dob": "1962-09-15",
+      "dod": "",
+      "address": "1207 Cypress CT",
+      "notes": "",
+      "personId": "p17579542272281",
+      "spouses": [
+        {
+          "spouseId": "p1",
+          "marriageDate": "1983-01-01",
+          "divorceDate": ""
+        }
+      ],
+      "fatherId": "p17590876793971",
+      "motherId": "p17590878050741"
+    },
+	{
+      "personId": "p111",
+      "firstName": "Narsinh ",
+      "lastName": "Kulkarni",
+      "gender": "male",
+      "dob": "1952-09-27",
+      "dod": null,
+      "address": "Kanerwadi",
+      "notes": "",
+      "spouses": [
+        {
+          "spouseId": "p17579542272281",
+          "marriageDate": "1983-01-01",
+          "divorceDate": ""
+        }
+      ],
+      "fatherId": "p17579685166441"
+    }
+	]
+}

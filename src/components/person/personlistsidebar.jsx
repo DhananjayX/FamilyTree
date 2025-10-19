@@ -41,7 +41,7 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('name'); // 'name' or 'age'
   const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
-  const itemsPerPage = 12;
+  const itemsPerPage = 5;
 
   const filteredPersons = persons.filter(person => {
     // Show all when search is empty
@@ -114,9 +114,14 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
     setCurrentPage(prev => Math.min(prev + 1, totalPages));
   };
 
+  const handlePersonClick = (person) => {
+    console.log('PersonListSidebar: Clicking person:', person); // Add this debug line
+    onSelect(person); // Make sure this is passing the full person object, not just the ID
+  };
+
   return (
     <aside className="person-list-sidebar">
-      <h3 className="person-list-header">{memberslabels.header.title}</h3>
+      {/* <h3 className="person-list-header">{memberslabels.header.title}</h3> */}
       <div className="person-list-search-container">
         <input
           type="text"
@@ -179,7 +184,7 @@ const PersonListSidebar = ({ persons, onSelect, selectedId }) => {
               key={person.personId}
               ref={el => { if (el) itemRefs.current.set(person.personId, el); }}
               className={`person-list-item ${selectedId === person.personId ? 'selected' : ''}`}
-              onClick={() => onSelect && onSelect(person.personId)}
+              onClick={() => handlePersonClick(person)} // Should pass the full person object
             >
               <span 
                 className={`person-name ${person.dod ? 'deceased' : ''}`}
