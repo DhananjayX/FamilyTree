@@ -172,11 +172,11 @@ const Persons = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row', minHeight: '80vh' }}>
-      <PersonListSidebar
+      {/* <PersonListSidebar
         persons={persons}
         onSelect={setSelectedPersonId}
         selectedId={selectedPersonId}
-      />
+      /> */}
       <div style={{ flex: 1, padding: '2rem', maxWidth: 700, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>

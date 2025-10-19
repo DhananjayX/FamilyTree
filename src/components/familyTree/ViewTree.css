@@ -5,29 +5,22 @@
 }
 
 .left-panel {
-  display: flex;
-  flex-direction: column;
   width: 250px;
   min-width: 250px;
-  max-width: 250px;
-  background-color: var(--surface-color);
-  border-right: 1px solid var(--border-color);
+  background-color: #fafafa;
+  border-right: 1px solid #ddd;
+  flex-shrink: 0;
 }
 
 /* Tree List takes up about 40% of left panel height */
 .left-panel .tree-list-sidebar {
   height: 40%;
-  min-height: 200px;
-  max-height: 50%;
-  border-bottom: 2px solid var(--border-color);
-  flex-shrink: 0;
+  border-bottom: 1px solid #ddd;
 }
 
-/* Person List takes up remaining 60% of left panel height */
+/* Person List takes up about 60% of left panel height */
 .left-panel .person-list-sidebar {
-  flex: 1;
-  min-height: 300px;
-  overflow: hidden;
+  height: 60%;
 }
 
 .tree-content {
@@ -35,20 +28,18 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background-color: var(--background-color);
 }
 
 .page-header {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
   border-bottom: 1px solid var(--border-color);
   background-color: var(--surface-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   flex-shrink: 0;
 }
 
 .page-header h1 {
-  margin: 0;
+  margin: 0 0 var(--spacing-sm) 0;
   font-size: 1.5rem;
   color: var(--text-primary);
 }
@@ -60,43 +51,195 @@
 }
 
 .current-tree {
-  font-size: 1.1rem;
   font-weight: 600;
   color: var(--primary-color);
 }
 
 .member-count {
-  font-size: 0.9rem;
   color: var(--text-secondary);
-  font-style: italic;
+  font-size: 0.9rem;
 }
 
 .no-selection {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
   padding: var(--spacing-xl);
   text-align: center;
   color: var(--text-secondary);
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .left-panel {
-    width: 250px;
-    min-width: 250px;
-    max-width: 250px;
+.no-selection p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Sliding Persons Panel */
+.sliding-persons-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.persons-panel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease;
+}
+
+.persons-panel-content {
+  width: 70%; /* Updated to 70% width */
+  max-width: 1000px; /* Increased max-width for larger panels */
+  min-width: 600px; /* Increased min-width */
+  background-color: white;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease;
+  z-index: 1001;
+}
+
+.persons-panel-header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--surface-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.persons-panel-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.close-panel-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.close-panel-btn:hover {
+  background-color: var(--surface-hover);
+  border-color: var(--error-color);
+  color: var(--error-color);
+}
+
+.persons-panel-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.persons-panel-body .persons-component {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Panel mode styling */
+.persons-panel-header.view-mode {
+  background-color: #e3f2fd;
+  border-bottom-color: #1976d2;
+}
+
+.persons-panel-header.view-mode h2 {
+  color: #1976d2;
+}
+
+.persons-panel-header.edit-mode {
+  background-color: #fff3e0;
+  border-bottom-color: #f57c00;
+}
+
+.persons-panel-header.edit-mode h2 {
+  color: #f57c00;
+}
+
+/* Add visual indicator for mode */
+.persons-panel-header h2::before {
+  margin-right: 8px;
+  font-size: 1rem;
+}
+
+.persons-panel-header.view-mode h2::before {
+  content: "👁️";
+}
+
+.persons-panel-header.edit-mode h2::before {
+  content: "✏️";
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .left-panel .tree-list-sidebar {
-    height: 35%;
-    min-height: 150px;
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .persons-panel-content {
+    width: 75%; /* Slightly larger on medium screens */
+    min-width: 500px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .persons-panel-content {
+    width: 80%; /* Even larger on smaller screens */
+    min-width: 450px;
+  }
+}
+
+@media (max-width: 768px) {
+  .persons-panel-content {
+    width: 100%; /* Full width on mobile */
+    min-width: unset;
+    max-width: unset;
   }
   
   .page-header {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-sm);
+  }
+}
+
+/* Handle escape key */
+@media (prefers-reduced-motion: reduce) {
+  .persons-panel-content,
+  .persons-panel-overlay {
+    animation: none;
   }
 }

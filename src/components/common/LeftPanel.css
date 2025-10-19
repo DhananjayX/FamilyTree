@@ -1,0 +1,73 @@
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+  background-color: var(--surface-color);
+  border-right: 1px solid var(--border-color);
+  flex-shrink: 0;
+  height: 100vh;
+}
+
+.tree-list-section {
+  flex: 0 0 40%; /* Fixed 40% height for tree list */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 200px;
+  background-color: var(--surface-color);
+}
+
+.tree-list-section .tree-list-sidebar {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.person-list-section {
+  flex: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 300px;
+  background-color: var(--surface-color);
+}
+
+.person-list-section .person-list-sidebar {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure proper scrolling in sections */
+.tree-list-section .tree-list-container,
+.person-list-section .person-list-container {
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .left-panel {
+    width: 230px;
+    min-width: 230px;
+  }
+}
+
+@media (max-width: 768px) {
+  .left-panel {
+    width: 200px;
+    min-width: 200px;
+  }
+  
+  .tree-list-section {
+    min-height: 150px;
+  }
+  
+  .person-list-section {
+    min-height: 200px;
+  }
+}
