@@ -351,8 +351,8 @@ const TreeListSidebar = ({ onTreeSelect, selectedTreeId }) => {
         ) : (
           <ul className="tree-list">
             {trees.map(tree => {
-              const isSelected = selectedTreeId === tree.treeId;
-              
+              var isSelected = selectedTreeId === tree.treeId;
+              console.log(`#Tree Item Render - ID: ${tree.treeId}, Selected: ${isSelected}, Name: ${tree.treeName}`);
               return (
                 <li
                   key={tree.treeId}
